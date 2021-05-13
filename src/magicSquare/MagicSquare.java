@@ -167,7 +167,7 @@ public class MagicSquare {
     public static void main(String[] args) throws Exception {
         MagicSquare ms = new MagicSquare(4);
 
-        ms.readMs("1.in");
+        ms.readMs("res/1.in");
         ms.fill();
         ms.show();
         System.out.println(ms.evl(ms.board));
