@@ -1,0 +1,191 @@
+
+.toolbar {
+    -fx-background-color: rgb(65, 131, 215);
+    -fx-padding: 25px;
+    -fx-width: 100%;
+}
+
+#headline {
+    -fx-font-size: 18pt;
+    -fx-font-family: "Lato";
+    -fx-text-fill: #fff;
+    -fx-label-font-weight: bold;
+}
+
+/*
+    Sudoku card
+*/
+.card {
+    -fx-background-color: #fff;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0.05, 0.0, 2.0);
+    -fx-background-radius: 6;
+}
+
+.cells-container {
+    -fx-border-color: rgba(0,0,0, 0.3);
+}
+
+/*
+    Cell styles
+*/
+.cell {
+    -fx-border-color: rgba(0,0,0, 0.1);
+    -fx-min-width: 60;
+    -fx-min-height: 60;
+    -fx-background-radius: 0;
+    -fx-background-color: #fff;
+    -fx-font-family: "Lato";
+    -fx-font-size: 18;
+    -fx-alignment: center;
+    -fx-text-fill: rgba(41,47,51, 0.9);
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.cell:hover {
+    -fx-background-color: rgba(65, 131, 215, 0.06);
+}
+
+.cell:focused {
+    -fx-background-color: rgba(65, 131, 215, 0.15);
+}
+
+.cell-focus {
+    -fx-background-color: rgba(65, 131, 215, 0.5);
+    /*-fx-background-color: rgba(65, 131, 215, 0.7);*/
+}
+
+.cell:readonly  {
+    -fx-text-fill: rgba(41,47,51, 0.6);
+    -fx-opacity: 1.0;
+}
+
+.cell:readonly:hover  {
+    -fx-background-color: rgba(65, 131, 215, 0.0);
+    -fx-opacity: 1.0;
+}
+
+.cell:readonly:focused  {
+    -fx-background-color: rgba(65, 131, 215, 0.1);
+    -fx-opacity: 1.0;
+}
+
+.cell-success:readonly,
+.cell-success:readonly:hover, 
+.cell-success:readonly:focused {
+    -fx-text-fill: rgb(0, 200 , 83);
+    -fx-background-color: rgba(0 , 200, 83, 0.075);
+    -fx-cursor: default;
+    -fx-opacity: 1.0;
+}
+
+.cell-danger {
+    -fx-text-fill: rgb(229,57,53);
+    -fx-background-color: rgba(229,57,53, 0.075);
+}
+
+.cell-danger:hover {
+    -fx-background-color: rgba(229,57,53, 0.15);
+}
+
+.cell-danger:focused {
+    -fx-background-color: rgba(229,57,53, 0.15);
+}
+
+/*
+    Custom borders to highlight 3x3 blocks
+*/
+.border-right {
+    -fx-border-color: rgba(0,0,0, 0.1) rgba(0,0,0, 0.3) rgba(0,0,0, 0.1) rgba(0,0,0, 0.1);
+}
+
+.border-top {
+    -fx-border-color: rgba(0,0,0, 0.3) rgba(0,0,0, 0.1) rgba(0,0,0, 0.1) rgba(0,0,0, 0.1);
+}
+
+.border-top-right {
+    -fx-border-color: rgba(0,0,0, 0.3) rgba(0,0,0, 0.3) rgba(0,0,0, 0.1) rgba(0,0,0, 0.1);
+}
+
+/*
+    Alert message
+*/
+.alert-success {
+    -fx-background-color: rgb(0, 200 , 83);
+}
+
+.alert-danger {
+    -fx-background-color: rgb(229,57,53);
+}
+
+.alert-message {
+    -fx-font-family: "Lato";
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+    -fx-padding: 10 0 20 0;
+    -fx-text-fill: #fff;
+}
+
+.alert-help {
+    -fx-font-family: "Lato";
+    -fx-font-size: 15;
+    -fx-font-weight: 400;
+    -fx-padding: 0 0 10 20;
+    -fx-text-fill: #fff;
+}
+
+.alert-icon {
+    -fx-background-size: 17px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-min-height: 17;
+    -fx-min-width: 17;
+}
+
+.alert-icon-success {
+    -fx-background-image: url("../icons/circle-with-check-symbol.png");
+}
+
+.alert-icon-danger {
+    -fx-background-image: url("../icons/cancel.png");
+}
+
+/*
+    Game controls
+*/
+.text {
+    -fx-font-family: "Lato";
+    -fx-fill-color: rgba(41,47,51, 0.9);
+}
+
+.text--headline {
+    -fx-font-size: 11;
+    -fx-font-weight: 400;
+    -fx-padding: 0 0 5 20;
+}
+
+.text--normal {
+    -fx-font-size: 25;
+    -fx-font-weight: 600;
+    -fx-padding: 0 0 30 20;
+}
+
+.alert-text {
+    -fx-font-family: "Lato";
+    -fx-fill-color: rgba(41,47,51, 0.9);
+    -fx-font-size: 14;
+    -fx-font-weight: 400;
+    -fx-padding: 0 0 0 20;
+}
+
+/*
+    Disable default context menu
+*/
+.text-field * .context-menu { 
+    visibility: hidden;
+    -fx-opacity: 0;
+}
+
+.text-field * .context-menu > .scroll-arrow {
+    -fx-opacity: 0;
+} 
