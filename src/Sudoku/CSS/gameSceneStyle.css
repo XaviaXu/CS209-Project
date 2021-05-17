@@ -30,8 +30,8 @@
 */
 .cell {
     -fx-border-color: rgba(0,0,0, 0.1);
-    -fx-min-width: 60;
-    -fx-min-height: 60;
+    -fx-min-width: 73;
+    -fx-min-height: 73;
     -fx-background-radius: 0;
     -fx-background-color: #fff;
     -fx-font-family: "Lato";

@@ -11,13 +11,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="620.0" prefWidth="1000.0" stylesheets="@../CSS/gameSceneStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Sudoku.view.LayoutController">
+<AnchorPane prefHeight="780.0" prefWidth="1300.0" stylesheets="@../CSS/gameSceneStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Sudoku.view.LayoutController">
     <children>
         <SplitPane dividerPositions="0.6322645290581163" layoutX="-6.0" prefHeight="620.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="618.0" prefWidth="597.0">
                <children>
-                  <GridPane fx:id="sudokuTextContainer" layoutX="39.0" layoutY="34.0" prefHeight="550.0" prefWidth="550.0">
+                  <GridPane fx:id="sudokuTextContainer" layoutX="77.0" layoutY="49.0" prefHeight="663.0" prefWidth="663.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -116,7 +116,7 @@
                                           <Font size="20.0" />
                                        </font>
                                     </Label>
-                                    <ChoiceBox prefHeight="29.0" prefWidth="118.0" GridPane.columnIndex="1" />
+                                    <ChoiceBox fx:id="preset" prefHeight="29.0" prefWidth="118.0" GridPane.columnIndex="1" />
                                  </children>
                                  <columnConstraints>
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="229.0" minWidth="10.0" prefWidth="156.0" />
