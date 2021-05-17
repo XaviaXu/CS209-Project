@@ -1,4 +1,4 @@
-package Sudoku.view;
+package view.sudoku;
 
 import com.sun.javafx.collections.ObservableIntegerArrayImpl;
 import javafx.beans.property.IntegerProperty;

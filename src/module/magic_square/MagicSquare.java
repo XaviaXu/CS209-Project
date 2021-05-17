@@ -1,4 +1,4 @@
-package magicSquare;
+package module.magic_square;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -21,7 +21,7 @@ public class MagicSquare {
      *
      * @param n the board size
      */
-    MagicSquare(int n) {
+    public MagicSquare(int n) {
         this.n = n;
         this.cnst = new int[n][n];
         this.board = new int[n][n];
@@ -158,6 +158,14 @@ public class MagicSquare {
         return mutates.get(0).mutate(this);
     }
 
+    public int[][] getBoard() {
+        return board;
+    }
+
+    public int[][] getCnst() {
+        return cnst;
+    }
+
     /**
      * The entry point of application.
      *
@@ -196,5 +204,9 @@ public class MagicSquare {
         ms.board = best;
         System.out.println(ms.evl(ms.board));
         ms.show();
+    }
+
+    public void nextGeneration(){
+        System.out.println(1);
     }
 }

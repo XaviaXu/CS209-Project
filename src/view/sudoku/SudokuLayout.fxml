@@ -11,7 +11,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="780.0" prefWidth="1300.0" stylesheets="@../CSS/gameSceneStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Sudoku.view.LayoutController">
+<AnchorPane prefHeight="780.0" prefWidth="1300.0" stylesheets="@../../css/gameSceneStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.sudoku.LayoutController">
     <children>
         <SplitPane dividerPositions="0.6322645290581163" layoutX="-6.0" prefHeight="620.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>

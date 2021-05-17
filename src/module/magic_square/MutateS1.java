@@ -1,4 +1,4 @@
-package magicSquare;
+package module.magic_square;
 
 import java.util.Random;
 

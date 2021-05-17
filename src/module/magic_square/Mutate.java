@@ -1,6 +1,4 @@
-package magicSquare;
-
-import magicSquare.MagicSquare;
+package module.magic_square;
 
 /**
  * Mutate method interface

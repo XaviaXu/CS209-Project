@@ -1,4 +1,4 @@
-package Sudoku.view;
+package view.sudoku;
 
 public class RootLayoutController {
 }
