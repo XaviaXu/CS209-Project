@@ -21,7 +21,7 @@ public class MagicSquare {
      *
      * @param n the board size
      */
-    MagicSquare(int n) {
+    public MagicSquare(int n) {
         this.n = n;
         this.cnst = new int[n][n];
         this.board = new int[n][n];

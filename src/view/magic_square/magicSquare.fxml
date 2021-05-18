@@ -11,60 +11,56 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.magic_square.magicSquareController">
-   <children>
-      <Pane>
-         <children>
-            <ImageView fitHeight="800.0" fitWidth="1300.0" onMouseClicked="#GameCondition" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../image/magicSquareBac.jpg" />
-               </image>
-            </ImageView>
-            <AnchorPane layoutX="816.0" layoutY="154.0" prefHeight="493.0" prefWidth="403.0">
-               <children>
-                  <RadioButton fx:id="ConstraintYes" layoutX="176.0" layoutY="199.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="76.0" text="Yes" textFill="#f8f8f8">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </RadioButton>
-                  <RadioButton fx:id="ConstraintNo" layoutX="243.0" layoutY="199.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="76.0" text="No" textFill="#f8f8f8">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </RadioButton>
-                  <Slider fx:id="sizeSlider" blockIncrement="5.0" layoutX="49.0" layoutY="291.0" majorTickUnit="5.0" max="20.0" minorTickCount="5" prefHeight="58.0" prefWidth="289.0" showTickLabels="true" showTickMarks="true" />
-                  <TextField fx:id="ErrorField" layoutX="118.0" layoutY="85.0" />
-                  <TextField fx:id="GenerationField" layoutX="176.0" layoutY="34.0" />
-                  <TextField fx:id="DimField" alignment="CENTER" layoutX="176.0" layoutY="367.0" style="-fx-font-weight: bold;" />
-                  <TextField fx:id="SumField" alignment="CENTER" editable="false" layoutX="176.0" layoutY="423.0" style="-fx-font-weight: bold;" />
-               </children>
-            </AnchorPane>
-            <FlowPane fx:id="Board" layoutX="60.0" layoutY="61.0" prefHeight="680.0" prefWidth="680.0" />
-            <MenuBar fx:id="Menu" opacity="0.0" prefHeight="27.0" prefWidth="1300.0">
-              <menus>
-                <Menu mnemonicParsing="false" text="File">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
-            <Label fx:id="ConstraintTip" layoutX="90.0" layoutY="769.0" opacity="0.0" prefHeight="19.0" prefWidth="259.0" text="Please Select Constraint Yes!!" textFill="WHITE">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Button fx:id="ConditionButton" layoutX="1046.0" layoutY="639.0" mnemonicParsing="false" onMouseClicked="#GameCondition" prefHeight="39.0" prefWidth="113.0" text="START" />
-         </children>
-      </Pane>
-   </children>
+    <children>
+        <Pane>
+            <children>
+                <ImageView fitHeight="800.0" fitWidth="1300.0" onMouseClicked="#GameCondition" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../image/magicSquareBac.jpg" />
+                    </image>
+                </ImageView>
+                <AnchorPane layoutX="816.0" layoutY="154.0" prefHeight="493.0" prefWidth="403.0">
+                    <children>
+                        <RadioButton fx:id="ConstraintYes" layoutX="176.0" layoutY="199.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="76.0" text="Yes" textFill="#f8f8f8">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </RadioButton>
+                        <RadioButton fx:id="ConstraintNo" layoutX="243.0" layoutY="199.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="76.0" text="No" textFill="#f8f8f8">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </RadioButton>
+                        <Slider fx:id="sizeSlider" blockIncrement="5.0" layoutX="49.0" layoutY="291.0" majorTickUnit="5.0" max="20.0" minorTickCount="5" prefHeight="58.0" prefWidth="289.0" showTickLabels="true" showTickMarks="true" />
+                        <TextField fx:id="ErrorField" layoutX="118.0" layoutY="85.0" />
+                        <TextField fx:id="GenerationField" layoutX="176.0" layoutY="34.0" />
+                        <TextField fx:id="DimField" alignment="CENTER" layoutX="176.0" layoutY="367.0" style="-fx-font-weight: bold;" />
+                        <TextField fx:id="SumField" alignment="CENTER" editable="false" layoutX="176.0" layoutY="423.0" style="-fx-font-weight: bold;" />
+                    </children>
+                </AnchorPane>
+                <FlowPane fx:id="Board" layoutX="60.0" layoutY="61.0" prefHeight="680.0" prefWidth="680.0" />
+                <MenuBar fx:id="Menu" opacity="0.66" prefHeight="27.0" prefWidth="1300.0" style="-fx-background-color: #5BA3BFFF;">
+                    <menus>
+                        <Menu fx:id="FileMenu" mnemonicParsing="false" text="File">
+                            <items>
+                                <MenuItem fx:id="OpenItem" mnemonicParsing="false" text="Open" />
+                                <MenuItem fx:id="SaveItem" mnemonicParsing="false" onAction="#handleSaveAs" text="Save" />
+                            </items>
+                        </Menu>
+                        <Menu fx:id="HelpMenu" mnemonicParsing="false" text="Help">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="About" />
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+                <Label fx:id="ConstraintTip" layoutX="90.0" layoutY="769.0" opacity="0.0" prefHeight="19.0" prefWidth="259.0" text="Please Select Constraint Yes!!" textFill="WHITE">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Label>
+                <Button fx:id="ConditionButton" layoutX="1046.0" layoutY="639.0" mnemonicParsing="false" onMouseClicked="#GameCondition" prefHeight="39.0" prefWidth="113.0" text="START" />
+            </children>
+        </Pane>
+    </children>
 </AnchorPane>
