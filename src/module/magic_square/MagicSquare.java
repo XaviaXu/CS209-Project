@@ -21,7 +21,7 @@ public class MagicSquare {
      *
      * @param n the board size
      */
-    public MagicSquare(int n) {
+    MagicSquare(int n) {
         this.n = n;
         this.cnst = new int[n][n];
         this.board = new int[n][n];
@@ -29,6 +29,8 @@ public class MagicSquare {
         mutates = new ArrayList<>();
 
         mutates.add(new MutateS1());
+        mutates.add(new MutateL1());
+        mutates.add(new MutateL2());
     }
 
     /**
@@ -47,6 +49,17 @@ public class MagicSquare {
                 cnst[i][j] = fileScanner.nextInt();
             }
         }
+    }
+
+    /**
+     * @return board copy
+     */
+    public int[][] boardCopy(){
+        int[][] nxt = new int[n][];
+        for (int i = 0; i < n; ++i) {
+            nxt[i] = board[i].clone();
+        }
+        return nxt;
     }
 
     /**
@@ -158,14 +171,6 @@ public class MagicSquare {
         return mutates.get(0).mutate(this);
     }
 
-    public int[][] getBoard() {
-        return board;
-    }
-
-    public int[][] getCnst() {
-        return cnst;
-    }
-
     /**
      * The entry point of application.
      *
@@ -185,6 +190,7 @@ public class MagicSquare {
 
         Random random = new Random();
 
+
         for (int gen = 0; gen < 1000000; ++gen) {
             int[][] nxt = ms.getNext();
             int eval = ms.evl(nxt);
@@ -200,13 +206,10 @@ public class MagicSquare {
                 break;
             }
         }
-
         ms.board = best;
+
+//        ms.board = ms.mutates.get(1).mutate(ms);
         System.out.println(ms.evl(ms.board));
         ms.show();
-    }
-
-    public void nextGeneration(){
-        System.out.println(1);
     }
 }

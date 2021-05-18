@@ -1,5 +1,6 @@
 package module.magic_square;
 
+
 /**
  * Mutate method interface
  */

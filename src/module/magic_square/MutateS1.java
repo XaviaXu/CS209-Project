@@ -20,10 +20,7 @@ public class MutateS1 implements Mutate {
 //            }
 //        }
 
-        int[][] nxt = new int[magicSquare.n][];
-        for (int i = 0; i < magicSquare.n; ++i) {
-            nxt[i] = magicSquare.board[i].clone();
-        }
+        int[][] nxt = magicSquare.boardCopy();
 
         Random random = new Random();
         int x1, x2, y1, y2;
