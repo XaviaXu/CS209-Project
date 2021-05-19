@@ -21,9 +21,9 @@ public class MagicSquare {
     public int min_err;
     public int[][] min_brd;
 
-    public static final double EPS = 1e-13;
-    public static final double DELT = 0.9999;
-    public static final int T = (int) 5e8;
+    public static final double EPS = 1e-17;
+    public static final double DELT = 0.996;
+    public static final int T = (int) 5e6;
 
     /**
      * Instantiates a new Magic square. Add mutate methods to List
@@ -254,11 +254,11 @@ public class MagicSquare {
             }
 
             ++gen;
-            if (gen % 2 == 0) {
+            if (gen % 200 == 0) {
                 System.out.println(ms.evl(ms.board) + "==========");
                 System.out.println("round " + gen + ": " + ms.min_err);
             }
-        } while (ms.min_err > 0 && gen <= 20);
+        } while (ms.min_err > 0 && gen <= 20000);
 
         long t2 = System.currentTimeMillis();
 
