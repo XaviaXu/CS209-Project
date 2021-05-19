@@ -2,6 +2,7 @@ package module.magic_square;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -16,6 +17,14 @@ public class MagicSquare {
     public int mn;
     public ArrayList<Mutate> mutates;
 
+    public double t;
+    public int min_err;
+    public int[][] min_brd;
+
+    public static final double EPS = 1e-13;
+    public static final double DELT = 0.9999;
+    public static final int T = (int) 5e8;
+
     /**
      * Instantiates a new Magic square. Add mutate methods to List
      *
@@ -28,9 +37,12 @@ public class MagicSquare {
         mn = n * (n * n + 1) / 2;
         mutates = new ArrayList<>();
 
-        mutates.add(new MutateS1());
-        mutates.add(new MutateL1());
-        mutates.add(new MutateL2());
+        for (int i = 0; i < 1; ++i)
+            mutates.add(new MutateL1());
+        for (int i = 0; i < 1; ++i)
+            mutates.add(new MutateL2());
+        for (int i = 0; i < 3; ++i)
+            mutates.add(new MutateS1());
     }
 
     /**
@@ -54,10 +66,21 @@ public class MagicSquare {
     /**
      * @return board copy
      */
-    public int[][] boardCopy(){
+    public int[][] boardCopy() {
         int[][] nxt = new int[n][];
         for (int i = 0; i < n; ++i) {
             nxt[i] = board[i].clone();
+        }
+        return nxt;
+    }
+
+    /**
+     * @return board copy
+     */
+    public int[][] boardCopy(int[][] b) {
+        int[][] nxt = new int[n][];
+        for (int i = 0; i < n; ++i) {
+            nxt[i] = b[i].clone();
         }
         return nxt;
     }
@@ -158,8 +181,13 @@ public class MagicSquare {
      * @param b the board
      * @return the error
      */
-    public int evl(int[][] b){
+    public int evl(int[][] b) {
         return evl1(b) + evl2(b);
+    }
+
+    public void algoInit() {
+        t = T;
+        board = boardCopy(min_brd);
     }
 
     /**
@@ -167,8 +195,33 @@ public class MagicSquare {
      *
      * @return the mutated square
      */
-    public int[][] getNext(){
-        return mutates.get(0).mutate(this);
+    public int[][] getNext() {
+        Random random = new Random();
+        int chs = random.nextInt(mutates.size());
+
+        return mutates.get(chs).mutate(this);
+    }
+
+    public boolean getNextGeneration() {
+        int[][] nxt = getNext();
+        int nxt_err = evl(nxt), cur_err = evl(board);
+
+        if (nxt_err <= cur_err) {
+            if (nxt_err < min_err) {
+                min_err = nxt_err;
+                min_brd = boardCopy(nxt);
+            }
+            board = nxt;
+            return true;
+        }
+
+        if (Math.exp((cur_err - nxt_err) / t) >= Math.random()) {
+            board = nxt;
+//            System.out.print("true");
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -178,38 +231,40 @@ public class MagicSquare {
      * @throws Exception the exception
      */
     public static void main(String[] args) throws Exception {
-        MagicSquare ms = new MagicSquare(4);
 
-        ms.readMs("res/1.in");
+        MagicSquare ms = new MagicSquare(10);
+
+        ms.readMs("res/10.in");
         ms.fill();
-        ms.show();
-        System.out.println(ms.evl(ms.board));
 
-        int[][] best = ms.board.clone();
-        int min_error = ms.evl(ms.board);
+        ms.min_err = ms.evl(ms.board);
+        ms.min_brd = ms.boardCopy();
 
-        Random random = new Random();
+        long t1 = System.currentTimeMillis();
 
-
-        for (int gen = 0; gen < 1000000; ++gen) {
-            int[][] nxt = ms.getNext();
-            int eval = ms.evl(nxt);
-            if (eval <= min_error) { // better solution
-                min_error = eval;
-                best = nxt;
-                ms.board = nxt;
-            } else if (random.nextDouble() < 0.001){ // worse solution with probability
-                ms.board = nxt;
+        int gen = 0;
+        long cnt = 0;
+        do {
+            ms.algoInit();
+//            cnt = 0;
+            while (ms.t >= EPS && ms.min_err > 0) {
+                boolean ret = ms.getNextGeneration();
+                ms.t *= DELT;
+                ++cnt;
             }
-            System.out.printf("gen: %d, error: %d\n", gen, ms.evl(ms.board));
-            if(eval == 0){
-                break;
-            }
-        }
-        ms.board = best;
 
-//        ms.board = ms.mutates.get(1).mutate(ms);
-        System.out.println(ms.evl(ms.board));
+            ++gen;
+            if (gen % 2 == 0) {
+                System.out.println(ms.evl(ms.board) + "==========");
+                System.out.println("round " + gen + ": " + ms.min_err);
+            }
+        } while (ms.min_err > 0 && gen <= 20);
+
+        long t2 = System.currentTimeMillis();
+
+        ms.board = ms.min_brd;
+        System.out.printf("time: %dms, gen: %d, cnt: %d\n" +
+                "evl: %d, evl1: %d, evl2: %d\n", (t2 - t1), gen, cnt, ms.evl(ms.board), ms.evl1(ms.board), ms.evl2(ms.board));
         ms.show();
     }
 }

@@ -54,7 +54,7 @@ public class MutateL1 implements Mutate {
             ex = e / magicSquare.n;
             ey = e % magicSquare.n;
             ev = nxt[ex][ey];
-            System.out.printf("%d, %d\n", ex, ey);
+//            System.out.printf("%d, %d\n", ex, ey);
 
             cnt = 0;
             t = 0;
@@ -76,7 +76,7 @@ public class MutateL1 implements Mutate {
 
                     newErr = getErr(ex, ey, magicSquare.mn, nxt);
 
-                    System.out.printf("%d, %d <-> %d, %d: %d->%d\n", ex, ey, tx, ty, oldErr, newErr);
+//                    System.out.printf("%d, %d <-> %d, %d: %d->%d\n", ex, ey, tx, ty, oldErr, newErr);
                     if (newErr < oldErr) {
                         cnt = 0;
                         break;

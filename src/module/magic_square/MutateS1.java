@@ -8,17 +8,6 @@ import java.util.Random;
 public class MutateS1 implements Mutate {
     @Override
     public int[][] mutate(MagicSquare magicSquare) {
-//        Set<Integer> row = new HashSet<>();
-//
-//        for (int i = 0; i < MagicSquare.n; ++i) {
-//            int sum = 0;
-//            for (int j = 0; j < magicSquare.n; ++j) {
-//                sum += magicSquare.board[i][j];
-//            }
-//            if (sum - magicSquare.mn != 0) {
-//                row.add(i);
-//            }
-//        }
 
         int[][] nxt = magicSquare.boardCopy();
 
