@@ -2,7 +2,6 @@ package module.magic_square;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -21,8 +20,8 @@ public class MagicSquare {
     public int min_err;
     public int[][] min_brd;
 
-    public static final double EPS = 1e-17;
-    public static final double DELT = 0.996;
+    public static final double EPS = 1e-12;
+    public static final double DELT = 0.9999;
     public static final int T = (int) 5e6;
 
     /**
@@ -37,12 +36,16 @@ public class MagicSquare {
         mn = n * (n * n + 1) / 2;
         mutates = new ArrayList<>();
 
+        for (int i = 0; i < 8; ++i)
+            mutates.add(new MutateS0());
+        for (int i = 0; i < 6; ++i)
+            mutates.add(new MutateS11());
+        for (int i = 0; i < 4; ++i)
+            mutates.add(new MutateS12());
+        for (int i = 0; i < 2; ++i)
+            mutates.add(new MutateS13());
         for (int i = 0; i < 1; ++i)
             mutates.add(new MutateL1());
-        for (int i = 0; i < 1; ++i)
-            mutates.add(new MutateL2());
-        for (int i = 0; i < 3; ++i)
-            mutates.add(new MutateS1());
     }
 
     /**
@@ -187,7 +190,7 @@ public class MagicSquare {
      * @return the error
      */
     public int evl(int[][] b) {
-        return evl1(b) + evl2(b);
+        return evl1(b);
     }
 
     /**
@@ -217,7 +220,7 @@ public class MagicSquare {
      */
     public boolean getNextGeneration() {
         int[][] nxt = getNext();
-        int nxt_err = evl(nxt), cur_err = evl(board);
+        int nxt_err = evl1(nxt), cur_err = evl1(board);
 
         if (nxt_err <= cur_err) {
             if (nxt_err < min_err) {
@@ -245,9 +248,9 @@ public class MagicSquare {
      */
     public static void main(String[] args) throws Exception {
 
-        MagicSquare ms = new MagicSquare(10);
+        MagicSquare ms = new MagicSquare(20);
 
-        ms.readMs("res/10.in");
+        ms.readMs("res/20.in");
         ms.fill();
 
         ms.min_err = ms.evl(ms.board);
@@ -267,7 +270,7 @@ public class MagicSquare {
             }
 
             ++gen;
-            if (gen % 200 == 0) {
+            if (gen % 2 == 0) {
                 System.out.println(ms.evl(ms.board) + "==========");
                 System.out.println("round " + gen + ": " + ms.min_err);
             }

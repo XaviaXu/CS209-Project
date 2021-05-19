@@ -5,7 +5,7 @@ import java.util.Random;
 /**
  * Swap two cells randomly
  */
-public class MutateS1 implements Mutate {
+public class MutateS0 implements Mutate {
     @Override
     public int[][] mutate(MagicSquare magicSquare) {
 
