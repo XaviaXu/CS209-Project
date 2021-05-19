@@ -64,6 +64,8 @@ public class MagicSquare {
     }
 
     /**
+     * Board copy int [ ] [ ].
+     *
      * @return board copy
      */
     public int[][] boardCopy() {
@@ -75,6 +77,9 @@ public class MagicSquare {
     }
 
     /**
+     * Board copy int [ ] [ ].
+     *
+     * @param b the b
      * @return board copy
      */
     public int[][] boardCopy(int[][] b) {
@@ -185,6 +190,9 @@ public class MagicSquare {
         return evl1(b) + evl2(b);
     }
 
+    /**
+     * Algo init.
+     */
     public void algoInit() {
         t = T;
         board = boardCopy(min_brd);
@@ -202,6 +210,11 @@ public class MagicSquare {
         return mutates.get(chs).mutate(this);
     }
 
+    /**
+     * Gets next generation.
+     *
+     * @return the next generation
+     */
     public boolean getNextGeneration() {
         int[][] nxt = getNext();
         int nxt_err = evl(nxt), cur_err = evl(board);
