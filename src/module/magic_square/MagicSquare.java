@@ -17,12 +17,13 @@ public class MagicSquare {
     public ArrayList<Mutate> mutates;
 
     public double t;
-    public int min_err;
-    public int[][] min_brd;
+//    public int min_err;
+//    public int[][] min_brd;
 
-    public static final double EPS = 1e-12;
-    public static final double DELT = 0.9999;
-    public static final int T = (int) 5e6;
+    public static final double EPS = 1e-8;
+    public static final double DELT = 0.95;
+    public static final int T = (int) 1e4;
+    public static final int S = 500;
 
     /**
      * Instantiates a new Magic square. Add mutate methods to List
@@ -198,7 +199,7 @@ public class MagicSquare {
      */
     public void algoInit() {
         t = T;
-        board = boardCopy(min_brd);
+//        board = boardCopy(min_brd);
     }
 
     /**
@@ -223,10 +224,10 @@ public class MagicSquare {
         int nxt_err = evl1(nxt), cur_err = evl1(board);
 
         if (nxt_err <= cur_err) {
-            if (nxt_err < min_err) {
-                min_err = nxt_err;
-                min_brd = boardCopy(nxt);
-            }
+//            if (nxt_err < min_err) {
+//                min_err = nxt_err;
+//                min_brd = boardCopy(nxt);
+//            }
             board = nxt;
             return true;
         }
@@ -251,36 +252,42 @@ public class MagicSquare {
         MagicSquare ms = new MagicSquare(20);
 
         ms.readMs("res/20.in");
-        ms.fill();
 
-        ms.min_err = ms.evl(ms.board);
-        ms.min_brd = ms.boardCopy();
+        int rnd = 10;
+        long sum = 0;
 
-        long t1 = System.currentTimeMillis();
+        while (rnd-- != 0) {
+            ms.fill();
+            long t1 = System.currentTimeMillis();
 
-        int gen = 0;
-        long cnt = 0;
-        do {
-            ms.algoInit();
-//            cnt = 0;
-            while (ms.t >= EPS && ms.min_err > 0) {
-                boolean ret = ms.getNextGeneration();
-                ms.t *= DELT;
-                ++cnt;
-            }
+            int gen = 0;
+            long cnt = 0;
+            do {
+                ms.algoInit();
+                while (ms.t >= EPS && ms.evl1(ms.board) > 0) {
+                    for (int i = 0; i < S; ++i) {
+                        boolean ret = ms.getNextGeneration();
+                    }
+                    ms.t *= DELT;
+                }
 
-            ++gen;
-            if (gen % 2 == 0) {
-                System.out.println(ms.evl(ms.board) + "==========");
-                System.out.println("round " + gen + ": " + ms.min_err);
-            }
-        } while (ms.min_err > 0 && gen <= 20000);
+                ++gen;
+                if (gen % 2 == 0) {
+                    System.out.println("round " + gen + ": " + ms.evl1(ms.board));
+                }
+            } while (ms.evl1(ms.board) > 0 && gen <= 20000);
 
-        long t2 = System.currentTimeMillis();
+            long t2 = System.currentTimeMillis();
+            sum += t2 - t1;
 
-        ms.board = ms.min_brd;
-        System.out.printf("time: %dms, gen: %d, cnt: %d\n" +
-                "evl: %d, evl1: %d, evl2: %d\n", (t2 - t1), gen, cnt, ms.evl(ms.board), ms.evl1(ms.board), ms.evl2(ms.board));
+//        ms.board = ms.min_brd;
+            System.out.printf("time: %dms, gen: %d, cnt: %d\n" +
+                    "evl: %d, evl1: %d, evl2: %d\n", (t2 - t1), gen, cnt, ms.evl(ms.board), ms.evl1(ms.board), ms.evl2(ms.board));
+        }
+
+        System.out.printf("avg time: %dms\n", sum / 10);
+
+
         ms.show();
     }
 }
