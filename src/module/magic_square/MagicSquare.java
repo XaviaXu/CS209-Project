@@ -26,8 +26,8 @@ public class MagicSquare {
 
     public static final double EPS2 = 1e-16;
     public static final double DELT2 = 0.95;
-    public static final double T2 = 1000;
-    public static final int S2 = 5;
+    public static final double T2 = 1;
+    public static final int S2 = 1;
 
     public MagicSquare(int n) {
         this.n = n;
@@ -205,15 +205,18 @@ public class MagicSquare {
     }
 
     public static void main(String[] args) throws Exception {
-
         MagicSquare ms = new MagicSquare(20);
 
         ms.readMs("res/20.in");
 
-        int rnd = 10;
-        long sum = 0;
+        int rnd = 30;
+        long[] times1 = new long[rnd];
+        long[] times2 = new long[rnd];
+        double[] tot_times = new double[rnd];
 
         for(int it = 0; it < rnd; ++it) {
+            System.out.println("new test: " + it + "\n" +
+                    "step1:=======");
             ms.fill();
             long t1 = System.currentTimeMillis();
 
@@ -235,11 +238,11 @@ public class MagicSquare {
             } while (ms.evl1(ms.board) > 0 && gen <= 20000);
 
             long t2 = System.currentTimeMillis();
-            sum += t2 - t1;
+            times1[it] = t2 - t1;
 
 //        ms.board = ms.min_brd;
             System.out.printf("time: %dms, gen: %d, cnt: %d\n" +
-                    "evl: %d, evl1: %d, evl2: %d\n", (t2 - t1), gen, cnt, ms.evl(ms.board), ms.evl1(ms.board), ms.evl2(ms.board));
+                    "evl: %d, evl1: %d, evl2: %d\n", times1[it], gen, cnt, ms.evl(ms.board), ms.evl1(ms.board), ms.evl2(ms.board));
 
             // step2
             System.out.println("step 2: ========");
@@ -257,21 +260,25 @@ public class MagicSquare {
                 }
 
                 ++gen;
-                if (gen % 20 == 0) {
+                if (gen % 200 == 0) {
                     System.out.println("round " + gen + ": " + ms.evl2(ms.board));
                 }
-            } while (ms.evl2(ms.board) > 0 && gen <= 20000);
+            } while (ms.evl2(ms.board) > 0 && gen <= 200000);
 
             t2 = System.currentTimeMillis();
-            sum += t2 - t1;
+            times2[it] += t2 - t1;
 
 //        ms.board = ms.min_brd;
             System.out.printf("time: %dms, gen: %d, cnt: %d\n" +
-                    "evl: %d, evl1: %d, evl2: %d\n", (t2 - t1), gen, cnt, ms.evl(ms.board), ms.evl1(ms.board), ms.evl2(ms.board));
+                    "evl: %d, evl1: %d, evl2: %d\n", times2[it], gen, cnt, ms.evl(ms.board), ms.evl1(ms.board), ms.evl2(ms.board));
 
+            tot_times[it] = times1[it] + times2[it];
         }
 
-        System.out.printf("avg time: %dms\n", sum / rnd);
+        long sum = (long) (MathUtil.sum(tot_times) / rnd);
+        double dev = MathUtil.popStdDev(tot_times);
+
+        System.out.printf("avg time: %dms, std dev: %fms\n", sum, dev);
 
 
         ms.show();
