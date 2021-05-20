@@ -22,7 +22,7 @@ public class MagicSquare {
     public int[][] min_brd;
 
     public static final double EPS = 1e-17;
-    public static final double DELT = 0.996;
+    public static final double DELT = 0.999;
     public static final int T = (int) 5e6;
 
     /**
@@ -267,9 +267,10 @@ public class MagicSquare {
             }
 
             ++gen;
-            if (gen % 200 == 0) {
+            if (gen % 4 == 0) {
                 System.out.println(ms.evl(ms.board) + "==========");
                 System.out.println("round " + gen + ": " + ms.min_err);
+                ms.fill();
             }
         } while (ms.min_err > 0 && gen <= 20000);
 
@@ -279,5 +280,40 @@ public class MagicSquare {
         System.out.printf("time: %dms, gen: %d, cnt: %d\n" +
                 "evl: %d, evl1: %d, evl2: %d\n", (t2 - t1), gen, cnt, ms.evl(ms.board), ms.evl1(ms.board), ms.evl2(ms.board));
         ms.show();
+
+        int[] rowErr, colErr, diaErr;
+        rowErr = new int[ms.n];
+        colErr = new int[ms.n];
+        diaErr = new int[2];// 0: \, 1: /
+
+        for (int i = 0; i < ms.n; ++i) {
+            diaErr[0] += ms.board[i][i];
+            diaErr[1] += ms.board[i][ms.n - i - 1];
+            for (int j = 0; j < ms.n; ++j) {
+                rowErr[i] += ms.board[i][j];
+                colErr[j] += ms.board[i][j];
+            }
+        }
+
+        System.out.println("row: ");
+        for (int i = 0; i < ms.n; ++i) {
+            if (rowErr[i] != ms.mn) {
+                System.out.printf("%d: %d\n", i, rowErr[i]);
+            }
+        }
+
+        System.out.println("col: ");
+        for (int i = 0; i < ms.n; ++i) {
+            if (colErr[i] != ms.mn) {
+                System.out.printf("%d: %d\n", i, colErr[i]);
+            }
+        }
+
+        System.out.println("dia: ");
+        for (int i = 0; i < 2; ++i) {
+            if (diaErr[i] != ms.mn) {
+                System.out.printf("%d: %d\n", i, diaErr[i]);
+            }
+        }
     }
 }

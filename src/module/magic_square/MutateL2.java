@@ -13,7 +13,7 @@ public class MutateL2 implements Mutate {
 
         Random random = new Random();
 
-        int dis = random.nextInt(2 * magicSquare.n + 2);
+        int dis = random.nextInt(2 * magicSquare.n);
 
         ArrayList<Integer> lst = new ArrayList<>();
 
