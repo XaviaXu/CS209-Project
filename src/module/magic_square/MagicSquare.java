@@ -13,6 +13,8 @@ public class MagicSquare {
     public int mn;
     public ArrayList<Mutate> mutates;
     public ArrayList<Mutate> mutates2;
+    public Mutate local1;
+    public Mutate local2;
 
     public double t;
 //    public int min_err;
@@ -26,7 +28,7 @@ public class MagicSquare {
 
     public static final double EPS2 = 1e-16;
     public static final double DELT2 = 0.95;
-    public static final double T2 = 1;
+    public static final double T2 = 1e3;
     public static final int S2 = 1;
 
     public MagicSquare(int n) {
@@ -36,8 +38,10 @@ public class MagicSquare {
         mn = n * (n * n + 1) / 2;
         mutates = new ArrayList<>();
         mutates2 = new ArrayList<>();
+        local1 = new MutateSL1();
+        local2 = new MutateSL2();
 
-        for (int i = 0; i < 8; ++i)
+        for (int i = 0; i < 4; ++i)
             mutates.add(new MutateS0());
         for (int i = 0; i < 6; ++i)
             mutates.add(new MutateS11());
@@ -153,7 +157,7 @@ public class MagicSquare {
     }
 
     public int evl(int[][] b) {
-        return evl1(b);
+        return evl1(b) + evl2(b);
     }
 
     public void algoInit() {
@@ -186,6 +190,8 @@ public class MagicSquare {
 
         if (nxt_err <= cur_err || Math.exp((cur_err - nxt_err) / t) >= Math.random()) {
             board = nxt;
+//            if (nxt_err < 50 * n && Math.random() < 0.001)
+//                board = local1.mutate(this);
             return true;
         }
 
@@ -210,11 +216,11 @@ public class MagicSquare {
         ms.readMs("res/20.in");
 
         int rnd = 30;
-        long[] times1 = new long[rnd];
-        long[] times2 = new long[rnd];
+        double[] times1 = new double[rnd];
+        double[] times2 = new double[rnd];
         double[] tot_times = new double[rnd];
 
-        for(int it = 0; it < rnd; ++it) {
+        for (int it = 0; it < rnd; ++it) {
             System.out.println("new test: " + it + "\n" +
                     "step1:=======");
             ms.fill();
@@ -223,6 +229,11 @@ public class MagicSquare {
             int gen = 0;
             long cnt = 0;
             do {
+                if (gen % 2 == 0) {
+                    System.out.println("round " + gen + ": " + ms.evl1(ms.board));
+//                    ms.fill();
+                }
+
                 ms.algoInit();
                 while (ms.t >= EPS && ms.evl1(ms.board) > 0) {
                     for (int i = 0; i < S; ++i) {
@@ -232,9 +243,6 @@ public class MagicSquare {
                 }
 
                 ++gen;
-                if (gen % 2 == 0) {
-                    System.out.println("round " + gen + ": " + ms.evl1(ms.board));
-                }
             } while (ms.evl1(ms.board) > 0 && gen <= 20000);
 
             long t2 = System.currentTimeMillis();
@@ -242,7 +250,7 @@ public class MagicSquare {
 
 //        ms.board = ms.min_brd;
             System.out.printf("time: %dms, gen: %d, cnt: %d\n" +
-                    "evl: %d, evl1: %d, evl2: %d\n", times1[it], gen, cnt, ms.evl(ms.board), ms.evl1(ms.board), ms.evl2(ms.board));
+                    "evl: %d, evl1: %d, evl2: %d\n", t2 - t1, gen, cnt, ms.evl(ms.board), ms.evl1(ms.board), ms.evl2(ms.board));
 
             // step2
             System.out.println("step 2: ========");
@@ -251,18 +259,19 @@ public class MagicSquare {
             gen = 0;
             cnt = 0;
             do {
-                ms.algoInit();
+                if (gen % 200 == 0) {
+                    System.out.println("round " + gen + ": " + ms.evl2(ms.board));
+                }
+
+                ms.algoInit2();
                 while (ms.t >= EPS2 && ms.evl2(ms.board) > 0) {
-                    for (int i = 0; i < S2; ++i) {
+                    for (int i = 0; ms.evl2(ms.board) > 0 && i < S2; ++i) {
                         boolean ret = ms.getNextGeneration2();
                     }
                     ms.t *= DELT2;
                 }
 
                 ++gen;
-                if (gen % 200 == 0) {
-                    System.out.println("round " + gen + ": " + ms.evl2(ms.board));
-                }
             } while (ms.evl2(ms.board) > 0 && gen <= 200000);
 
             t2 = System.currentTimeMillis();
@@ -270,15 +279,24 @@ public class MagicSquare {
 
 //        ms.board = ms.min_brd;
             System.out.printf("time: %dms, gen: %d, cnt: %d\n" +
-                    "evl: %d, evl1: %d, evl2: %d\n", times2[it], gen, cnt, ms.evl(ms.board), ms.evl1(ms.board), ms.evl2(ms.board));
+                    "evl: %d, evl1: %d, evl2: %d\n", t2 - t1, gen, cnt, ms.evl(ms.board), ms.evl1(ms.board), ms.evl2(ms.board));
 
             tot_times[it] = times1[it] + times2[it];
         }
+        long sum;
+        double dev;
 
-        long sum = (long) (MathUtil.sum(tot_times) / rnd);
-        double dev = MathUtil.popStdDev(tot_times);
+        sum = (long) (MathUtil.sum(times1) / rnd);
+        dev = MathUtil.popStdDev(times1);
+        System.out.printf("ti1: avg time: %dms, std dev: %fms\n", sum, dev);
 
-        System.out.printf("avg time: %dms, std dev: %fms\n", sum, dev);
+        sum = (long) (MathUtil.sum(times2) / rnd);
+        dev = MathUtil.popStdDev(times2);
+        System.out.printf("ti2: avg time: %dms, std dev: %fms\n", sum, dev);
+
+        sum = (long) (MathUtil.sum(tot_times) / rnd);
+        dev = MathUtil.popStdDev(tot_times);
+        System.out.printf("tot: avg time: %dms, std dev: %fms\n", sum, dev);
 
 
         ms.show();
