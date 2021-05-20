@@ -47,7 +47,7 @@ public class MutateS21 implements Mutate {
                 nxt[r1] = nxt[r2];
                 nxt[r2] = tmp;
             }
-        } else{
+        } else {
             // column
             for (int i = 0; i < magicSquare.n; ++i) {
                 boolean check = true;
