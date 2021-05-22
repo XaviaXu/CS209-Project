@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         int lvl = 20;
         MS ms = new MS(lvl);
-        ms.readMs("res/" + lvl + ".in");
+        ms.readMs("input/" + lvl + ".in");
 
         int rnd = 30;
         double[] times1 = new double[rnd];
@@ -17,6 +17,9 @@ public class Main {
 
         Algo1.init(lvl);
         Algo2.init(lvl);
+
+        ms.show();
+        ms.fill();
 
         for (int it = 0; it < rnd; ++it) {
             ms.fill();
@@ -31,9 +34,9 @@ public class Main {
 
             ms.reEvl1();
             do {
-                if (gen % 2 == 0) {
-                    System.out.println("round " + gen + ": " + ms.evl1);
-                }
+//                if (gen % 2 == 0) {
+//                    System.out.println("round " + gen + ": " + ms.evl1);
+//                }
 
                 Algo1.algoInit();
 //                ms.reEvl1();
@@ -63,9 +66,9 @@ public class Main {
 
             ms.reEvl2();
             do {
-                if (gen % 200 == 0) {
-                    System.out.println("round " + gen + ": " + ms.evl2);
-                }
+//                if (gen % 200 == 0) {
+//                    System.out.println("round " + gen + ": " + ms.evl2);
+//                }
 
                 Algo2.algoInit();
 //                ms.reEvl1();
@@ -96,18 +99,27 @@ public class Main {
         long sum;
         double dev;
 
+        for (double i : times1) {
+            System.out.printf("%d ", (int) i);
+        }
         sum = (long) (MathUtil.sum(times1) / rnd);
         dev = MathUtil.popStdDev(times1);
-        System.out.printf("ti1: avg time: %dms, std dev: %fms\n", sum, dev);
+        System.out.printf("\nti1: avg time: %dms, std dev: %fms\n", sum, dev);
 
 
+        for (double i : times2) {
+            System.out.printf("%d ", (int) i);
+        }
         sum = (long) (MathUtil.sum(times2) / rnd);
         dev = MathUtil.popStdDev(times2);
-        System.out.printf("ti2: avg time: %dms, std dev: %fms\n", sum, dev);
+        System.out.printf("\nti2: avg time: %dms, std dev: %fms\n", sum, dev);
 
+        for (double i : tot_times) {
+            System.out.printf("%d ", (int) i);
+        }
         sum = (long) (MathUtil.sum(tot_times) / rnd);
         dev = MathUtil.popStdDev(tot_times);
-        System.out.printf("tot: avg time: %dms, std dev: %fms\n", sum, dev);
+        System.out.printf("\ntot: avg time: %dms, std dev: %fms\n", sum, dev);
 
         ms.show();
     }
