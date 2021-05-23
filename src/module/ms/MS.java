@@ -1,14 +1,13 @@
 package module.ms;
 
+import module.SquareProblem;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class MS {
-    public int n;
+public class MS extends SquareProblem {
     public int mn;
-    public int[][] square;
-    public int[][] cnst;
 
     public int evl1;
     public int evl2;
@@ -25,9 +24,7 @@ public class MS {
      * @param n the magic square size
      */
     public MS(int n) {
-        this.n = n;
-        this.cnst = new int[n][n];
-        this.square = new int[n][n];
+        super(n);
         this.mn = n * (n * n + 1) / 2;
 
         rowErr = new int[n];
@@ -44,6 +41,7 @@ public class MS {
      * @param fn the file name
      * @throws IOException the io exception
      */
+    @Override
     public void readMs(String fn) throws IOException {
         FileInputStream fileInputStream = new FileInputStream(fn);
 
@@ -66,6 +64,7 @@ public class MS {
     /**
      * Fill a initial board with constraints
      */
+    @Override
     public void fill() {
         boolean[] vis = new boolean[n * n + 1];
         for (int[] row : cnst) {
@@ -103,6 +102,7 @@ public class MS {
     /**
      * Show the board
      */
+    @Override
     public void show() {
         for (int[] row : square) {
             for (int x : row) {
