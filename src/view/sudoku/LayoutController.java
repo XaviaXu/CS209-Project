@@ -5,11 +5,17 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableIntegerArray;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
-
+import java.io.File;
+import java.util.Optional;
 
 public class LayoutController {
 
@@ -19,12 +25,27 @@ public class LayoutController {
     @FXML
     private ChoiceBox<String> preset;
 
+//    @FXML
+//    private MenuBar mainMenu;
+
+    @FXML
+    private Label generation;
+
+    @FXML
+    private Label error;
+//
+//    @FXML
+//    private Button ctrl;
+
+
+
     private static TextField[][] sudokuCells = new TextField[9][9];
     private boolean playerCtrl = false;
+    private Stage stage;
 
 
-    private int[][] sudokuBoard;
-    private boolean[][] blocked;
+    private int[][] sudokuBoard = new int[9][9];
+    private boolean[][] status;
 
     @FXML
     private void initialize(){
@@ -53,17 +74,44 @@ public class LayoutController {
                 current.textProperty().addListener((observable, oldVal, newVal) -> {
                     if(current.getText().length()>1){
                         current.setText("");
+                        sudokuBoard[finalRowIndex][finalColumnIndex] = 0;
                     }
                     else if(!isInputValid(current.getText())){
+                        sudokuBoard[finalRowIndex][finalColumnIndex] = 0;
                         current.setText("");
                     }
-                });
+                    else{
+                        sudokuBoard[finalRowIndex][finalColumnIndex] = Integer.parseInt(current.getText());
+                    }
 
+                    if(checkConstrain(finalRowIndex,finalColumnIndex)){
+                        //正常
+                        current.setStyle("-fx-background-color: rgba(255, 255, 255, 0.3);");
+                    }else{
+
+                        current.setStyle("-fx-background-color: rgba(255,0,0,0.3);");
+                    }
+
+
+                });
+                current.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        if(event.getButton()== MouseButton.SECONDARY){
+                            current.setText("");
+                            sudokuBoard[finalRowIndex][finalColumnIndex] = 0;
+                        }
+                    }
+                });
             }
         }
 
         preset.getItems().addAll("EASY","NORMAL","HARD");
+//        mainMenu.setOnMouseEntered(e->mainMenu.setOpacity(1));
+//        mainMenu.setOnMouseExited(event -> mainMenu.setOpacity(0));
 
+        generation.setText("0");
+        error.setText("0");
 
     }
 
@@ -123,6 +171,64 @@ public class LayoutController {
             }
         }
     }
+
+    @FXML
+    private void handleSaveAs(){
+
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+                "XML files (*.xml)", "*.xml");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File file = fileChooser.showSaveDialog(this.stage);
+
+        if (file != null) {
+            // Make sure it has the correct extension
+            if (!file.getPath().endsWith(".csv")) {
+                file = new File(file.getPath() + ".csv");
+            }
+//            setStudentFilePath(selected.getText(),file);
+//            saveStudentDataToFile(data, file);
+        }
+
+
+
+    }
+
+    private void setFilePath(File file){
+
+    }
+
+
+    public void set_stage(Stage stage) {
+        this.stage = stage;
+    }
+
+    private boolean checkConstrain(int row, int column){
+        for (int i = 0; i < 9; i++) {
+            if(sudokuBoard[row][i]==sudokuBoard[row][column]&&i!=column){
+                return false;
+            }
+            if(sudokuBoard[i][column]==sudokuBoard[row][column]&&i!=row){
+                return false;
+            }
+        }
+
+        int rowDiff = row%3;
+        int columnDiff = column%3;
+
+        for (int i = 0; i <3 ; i++) {
+            for (int j = 0; j < 3; j++) {
+                int x = row-rowDiff+i;
+                int y = column-columnDiff+j;
+                if(sudokuBoard[x][y]==sudokuBoard[row][column]&&!(x==row&&y==column)){
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+
 
 
 }

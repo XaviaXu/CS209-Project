@@ -25,25 +25,34 @@
     -fx-border-color: rgba(0,0,0, 0.3);
 }
 
+.label{
+    -fx-font-family: "Lato";
+    -fx-font-size: 26;
+    /*-fx-alignment: center;*/
+}
+
 /*
     Cell styles
 */
 .cell {
-    -fx-border-color: rgba(0,0,0, 0.1);
-    -fx-min-width: 73;
-    -fx-min-height: 73;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-min-width: 74;
+    -fx-min-height: 78;
     -fx-background-radius: 0;
-    -fx-background-color: #fff;
+    -fx-background-color: rgba(255, 255, 255, 0.3);
     -fx-font-family: "Lato";
     -fx-font-size: 18;
     -fx-alignment: center;
-    -fx-text-fill: rgba(41,47,51, 0.9);
+    -fx-text-fill: rgba(213, 242, 255, 0.9);
     -fx-cursor: hand;
     -fx-font-weight: bold;
 }
+.warning{
+    -fx-background-color: #ff0000;
+}
 
 .cell:hover {
-    -fx-background-color: rgba(65, 131, 215, 0.06);
+    -fx-background-color: rgba(171, 205, 255, 0.3);
 }
 
 .cell:focused {
@@ -96,15 +105,16 @@
     Custom borders to highlight 3x3 blocks
 */
 .border-right {
-    -fx-border-color: rgba(0,0,0, 0.1) rgba(0,0,0, 0.3) rgba(0,0,0, 0.1) rgba(0,0,0, 0.1);
+    -fx-border-color: rgba(255, 255, 255, 0.1) rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1) rgba(255, 255, 255, 0.1);
+
 }
 
 .border-top {
-    -fx-border-color: rgba(0,0,0, 0.3) rgba(0,0,0, 0.1) rgba(0,0,0, 0.1) rgba(0,0,0, 0.1);
+    -fx-border-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1) rgba(255, 255, 255, 0.1) rgba(255, 255, 255, 0.1);
 }
 
 .border-top-right {
-    -fx-border-color: rgba(0,0,0, 0.3) rgba(0,0,0, 0.3) rgba(0,0,0, 0.1) rgba(0,0,0, 0.1);
+    -fx-border-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1) rgba(255, 255, 255, 0.1);
 }
 
 /*
@@ -142,13 +152,6 @@
     -fx-min-width: 17;
 }
 
-.alert-icon-success {
-    -fx-background-image: url("../icons/circle-with-check-symbol.png");
-}
-
-.alert-icon-danger {
-    -fx-background-image: url("../icons/cancel.png");
-}
 
 /*
     Game controls

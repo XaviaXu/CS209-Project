@@ -35,7 +35,7 @@ public class WindowController {
         Scene scene = new Scene(rootLayout);
         Stage stage = new Stage();
         LayoutController sc = loader.getController();
-//        sc.setMS_stage(stage);
+        sc.set_stage(stage);
         stage.setScene(scene);
         stage.show();
     }
