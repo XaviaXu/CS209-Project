@@ -25,8 +25,8 @@ public class SK extends SquareProblem {
 
         Scanner fileScanner = new Scanner(fileInputStream);
 
-        for (int i = 0; i < size; ++i) {
-            for (int j = 0; j < size; ++j) {
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
                 cnst[i][j] = fileScanner.nextInt();
             }
         }
