@@ -14,7 +14,7 @@ public class MS {
     public int evl2;
     public int[] rowErr;
     public int[] colErr;
-    public int[] diaErr;
+    public int[] diaErr; // 0: \, 1: /
     public boolean[] rowCnst;
     public boolean[] colCnst;
 
@@ -57,12 +57,10 @@ public class MS {
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < n; ++j) {
                 cnst[i][j] = fileScanner.nextInt();
-                if (cnst[i][j] != 0) {
-                    rowCnst[i] = true;
-                    colCnst[i] = true;
-                }
             }
         }
+
+
     }
 
     /**
@@ -88,6 +86,15 @@ public class MS {
                         ++cnt;
                 } else {
                     square[i][j] = cnst[i][j];
+                }
+            }
+        }
+
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (cnst[i][j] != 0) {
+                    rowCnst[i] = true;
+                    colCnst[i] = true;
                 }
             }
         }
