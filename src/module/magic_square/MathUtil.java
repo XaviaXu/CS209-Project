@@ -14,7 +14,7 @@ public class MathUtil {
         return mean;
     }
 
-    // population variance 总体方差
+    // population variance
     public static double popVariance(double[] data) {
         double variance = 0;
         for (int i = 0; i < data.length; i++) {
@@ -24,14 +24,14 @@ public class MathUtil {
         return variance;
     }
 
-    // population standard deviation 总体标准差
+    // population standard deviation
     public static double popStdDev(double[] data) {
         double std_dev;
         std_dev = Math.sqrt(popVariance(data));
         return std_dev;
     }
 
-    //sample variance 样本方差
+    //sample variance
     public static double sampleVariance(double[] data) {
         double variance = 0;
         for (int i = 0; i < data.length; i++) {
@@ -41,7 +41,7 @@ public class MathUtil {
         return variance;
     }
 
-    // sample standard deviation 样本标准差
+    // sample standard deviation
     public static double sampleStdDev(double[] data) {
         double std_dev;
         std_dev = Math.sqrt(sampleVariance(data));

@@ -212,17 +212,17 @@ public class SimulatedAnneling {
             while (t >= eps && cost > 0) {
                 ret = cur.swapCells(t, eps);
 //                System.out.println(t + ", " + cur.getCost() + ": " + (ret ? "swap success" : "swap fail"));
-                if(ret) {
-                    cost = cur.getCost();
-                    if(cost <= min){
-                        if(cost < min){
-                            System.out.println("round " + cnt + ": " + min);
-                            cur.show();
-                        }
-                        min = cost;
-                        mb = cur.board.clone();
-                    }
-                }
+//                if(ret) {
+//                    cost = cur.getCost();
+//                    if(cost <= min){
+//                        if(cost < min){
+//                            System.out.println("round " + cnt + ": " + min);
+//                            cur.show();
+//                        }
+//                        min = cost;
+//                        mb = cur.board.clone();
+//                    }
+//                }
                 t *= delt;
             }
             ++cnt;

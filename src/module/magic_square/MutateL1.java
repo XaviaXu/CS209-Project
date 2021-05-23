@@ -15,11 +15,8 @@ public class MutateL1 implements Mutate {
         int[] rowErr, colErr, diaErr;
         rowErr = new int[magicSquare.n];
         colErr = new int[magicSquare.n];
-        diaErr = new int[2];// 0: \, 1: /
 
         for (int i = 0; i < magicSquare.n; ++i) {
-            diaErr[0] += nxt[i][i];
-            diaErr[1] += nxt[i][magicSquare.n - i - 1];
             for (int j = 0; j < magicSquare.n; ++j) {
                 rowErr[i] += nxt[i][j];
                 colErr[j] += nxt[i][j];
@@ -27,19 +24,10 @@ public class MutateL1 implements Mutate {
         }
 
         for (int i = 0; i < magicSquare.n; ++i) {
-            rowErr[i] -= magicSquare.mn;
-            colErr[i] -= magicSquare.mn;
-        }
-        diaErr[0] -= magicSquare.mn;
-        diaErr[1] -= magicSquare.mn;
-
-        for (int i = 0; i < magicSquare.n; ++i) {
             for (int j = 0; j < magicSquare.n; ++j) {
                 if (magicSquare.cnst[i][j] == 0 &&
                         rowErr[i] != 0 &&
-                        colErr[j] != 0 &&
-                        !(i == j && diaErr[0] == 0) &&
-                        !(magicSquare.n - i - 1 == j && diaErr[1] == 0)) {
+                        colErr[j] != 0) {
                     set1.add(magicSquare.n * i + j);
                 }
             }
@@ -79,7 +67,6 @@ public class MutateL1 implements Mutate {
 //                    System.out.printf("%d, %d <-> %d, %d: %d->%d\n", ex, ey, tx, ty, oldErr, newErr);
                     if (newErr < oldErr) {
                         cnt = 0;
-                        break;
                     } else {
                         nxt[ex][ey] = tv;
                         nxt[tx][ty] = ev;
@@ -111,21 +98,6 @@ public class MutateL1 implements Mutate {
         }
         err += Math.abs(sum - mn);
 
-        if(x == y){
-            sum = 0;
-            for (int i = 0; i < n; ++i) {
-                sum += b[i][i];
-            }
-            err += Math.abs(sum - mn);
-        }
-
-        if(n - x - 1 == y){
-            sum = 0;
-            for (int i = 0; i < n; ++i) {
-                sum += b[i][n - x - 1];
-            }
-            err += Math.abs(sum - mn);
-        }
         return err;
     }
 }
