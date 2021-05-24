@@ -39,7 +39,23 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
             </GridPane>
-            <Pane layoutX="985.0" layoutY="229.0" prefHeight="314.0" prefWidth="225.0">
+            <MenuBar fx:id="mainMenu" opacity="0.54" prefHeight="44.0" prefWidth="1300.0" styleClass="myMenu">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#handleOpen" text="Open" />
+                        <MenuItem mnemonicParsing="false" text="Save" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleSaveAs" text="SaveAs" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <Pane layoutX="985.0" layoutY="229.0" prefHeight="512.0" prefWidth="225.0">
                <children>
                   <ChoiceBox fx:id="preset" layoutX="13.0" layoutY="248.0" prefHeight="28.0" prefWidth="199.0" />
                   <Label fx:id="error" layoutX="80.0" layoutY="79.0" text="error" textFill="WHITE" />
@@ -48,6 +64,7 @@
                         <Font name="Cambria" size="36.0" />
                      </font>
                   </Label>
+                  <Button fx:id="ctrlButton" layoutX="52.0" layoutY="443.0" mnemonicParsing="false" onMouseClicked="#gameControl" prefHeight="55.0" prefWidth="117.0" text="START" />
                </children>
             </Pane>
          </children>
