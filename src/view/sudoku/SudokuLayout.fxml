@@ -39,12 +39,12 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
             </GridPane>
-            <MenuBar fx:id="mainMenu" opacity="0.54" prefHeight="44.0" prefWidth="1300.0" styleClass="myMenu">
+            <MenuBar fx:id="mainMenu" opacity="0.54" prefHeight="20.0" prefWidth="1300.0" styleClass="myMenu">
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#handleOpen" text="Open" />
-                        <MenuItem mnemonicParsing="false" text="Save" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleSave" text="Save" />
                         <MenuItem mnemonicParsing="false" onAction="#handleSaveAs" text="SaveAs" />
                   </items>
                 </Menu>
