@@ -20,6 +20,9 @@ import javafx.util.Duration;
 import module.Condition;
 import module.magic_square.MagicSquare;
 import module.magic_square.MagicSquareWrapper;
+import module.ms.Algo1;
+import module.ms.Algo2;
+import module.ms.MS;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -56,6 +59,7 @@ public class magicSquareController {
     @FXML
     private MenuItem SaveItem;
 
+    private String Path = null;
 
     private Stage MS_stage;
     private Timeline timeline;
@@ -74,10 +78,13 @@ public class magicSquareController {
 
     private boolean constraint[][];
     private boolean ifConstraint;
+    private boolean listenStatus;
     private boolean errorOnceOrGet;//to reduce error calculate
 //    private Condition state;
 
-    private MagicSquare ms;
+    private MS ms;
+    private int[][] bestBoard;
+    private int min_error = Integer.MAX_VALUE;
 
     public void setMS_stage(Stage MS_stage) {
         this.MS_stage = MS_stage;
@@ -88,21 +95,28 @@ public class magicSquareController {
 //        Board.heightProperty().addListener((observable, oldValue, newValue) -> board_height = (double)newValue);
 //        Board.widthProperty().addListener((observable, oldValue, newValue) -> board_width = (double)newValue);
         putBoard();
+        sizeSlider.setValue(20.0);
         sizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             size = (int) Math.floor((double) newValue);
             Board.getChildren().clear();
             putBoard();
         });
+        sizeSlider.setValue(20.0);
 //        Menu.setOnMouseEntered(e -> Menu.setOpacity(1));
 //        Menu.setOnMouseExited(e -> Menu.setOpacity(0));
-
 
         ConstraintNo.setSelected(true);
     }
 
 
     private void putBoard() {
-        ms = new MagicSquare(size);
+        listenStatus = true;
+        ms = new MS(size);
+        if(size>1) {
+            Algo1.init(size);
+            Algo2.init(size);
+        }
+
         clock = new boolean[size][size];
         constraint = new boolean[size][size];
         grid = new Label[size + 2][size + 2];
@@ -132,7 +146,7 @@ public class magicSquareController {
 //
                 if (i == 0 || j == 0 || i == size + 1 || j == size + 1) {
                     grid[i][j].setStyle("-fx-border-color: #f2eada;-fx-font-family: 'FangSong';" +
-                            "-fx-font-size: 10;-fx-font-weight: bold;-fx-text-fill: Blue;-fx-background-color: #EE7AE9");
+                            "-fx-font-size: 10;-fx-font-weight: bold;-fx-text-fill: #42026a;-fx-background-color: #028d92");
                     continue;
                 }
 
@@ -146,8 +160,8 @@ public class magicSquareController {
                 int finalJ = j;
 
                 grid[i][j].textProperty().addListener((observable, oldValue, newValue) -> {
-                    ms.board[finalI - 1][finalJ - 1] = Integer.parseInt(newValue);
-                    ErrorField.setText(String.valueOf(ms.evl(ms.board)));
+                    ms.square[finalI - 1][finalJ - 1] = Integer.parseInt(newValue);
+                    ErrorField.setText(String.valueOf(ms.evl1));
 
                     int value = Integer.parseInt(grid[0][finalJ].getText())
                             + Integer.parseInt((String) newValue) - Integer.parseInt(oldValue);
@@ -173,15 +187,16 @@ public class magicSquareController {
                     if (e.getButton() == MouseButton.PRIMARY) ClickGrid(finalI, finalJ);
                     else if (e.getButton() == MouseButton.SECONDARY) {
                         if (ConstraintYes.isSelected()) {
-                            if(clock_x==finalI&&clock_y==finalJ) {
+                            if (clock_x == finalI && clock_y == finalJ) {
                                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                 alert.initOwner(MS_stage);
                                 alert.setTitle("Information");
                                 alert.setHeaderText("Please first cancel selected this grid and add constraint");
                                 alert.showAndWait();
-                            }else {
+                            } else {
                                 if (!constraint[finalI - 1][finalJ - 1]) {
                                     ms.cnst[finalI - 1][finalJ - 1] = Integer.parseInt(grid[finalI][finalJ].getText());
+                                    System.out.println(ms.cnst[finalI - 1][finalJ - 1]);
                                     constraint[finalI - 1][finalJ - 1] = true;
                                     grid[finalI][finalJ].setBackground(new Background(new BackgroundFill(Color.valueOf("#EEB422"), null, null)));
                                 } else {
@@ -225,7 +240,7 @@ public class magicSquareController {
         } else {
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
-                    grid[i][j].setText(String.valueOf(array[i][j]));
+                    grid[i + 1][j + 1].setText(String.valueOf(array[i][j]));
                 }
             }
         }
@@ -267,17 +282,33 @@ public class magicSquareController {
     public void GameCondition() {
         if (ConditionButton.getText().equals(Condition.START.toString())) {
             ConditionButton.setText(Condition.PAUSED.toString());
-            timeline = new Timeline(new KeyFrame(Duration.seconds(0.05), new EventHandler<ActionEvent>() {
+            ms.fill();
+            ms.reEvl1();
+            Algo1.algoInit();
+
+            timeline = new Timeline(new KeyFrame(Duration.seconds(0.0001), new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-//                    ms.nextGeneration();
-                    GenerationField.setText(String.valueOf(Integer.parseInt(GenerationField.getText()) + 1));
-                    if (Integer.parseInt(GenerationField.getText()) % 100 == 0) {
-                        putGrid(ms.board);
+
+                    Algo1.nextGeneration(ms);
+                    int generation = Integer.parseInt(GenerationField.getText());
+                    GenerationField.setText(String.valueOf(generation + 1));
+                    if (generation % Algo1.S == 0) {
+                        Algo1.anneal();
+                        if (Algo1.t < Algo1.EPS || ms.evl1 <= 0) {
+                            timeline.stop();
+                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                            alert.initOwner(MS_stage);
+                            alert.setTitle("Tips");
+                            alert.setHeaderText("The first Generation has finished");
+                            alert.showAndWait();
+                        }
                     }
+                    putGrid(ms.square);
+
                 }
             }));
-            timeline.setCycleCount(100000);
+            timeline.setCycleCount(10000000);
             timeline.play();
         } else if (ConditionButton.getText().equals(Condition.PAUSED.toString())) {
             ConditionButton.setText(Condition.CONTINUE.toString());
@@ -330,7 +361,7 @@ public class magicSquareController {
             MagicSquareWrapper wrapper = new MagicSquareWrapper();
             wrapper.setN(size);
             wrapper.setGeneration(Integer.parseInt(GenerationField.getText()));
-            wrapper.setBoard(ms.board);
+            wrapper.setBoard(ms.square);
             wrapper.setCnst(ms.cnst);
             wrapper.setMn(ms.mn);
 //            wrapper.setMutates(ms.mutates);
@@ -344,5 +375,10 @@ public class magicSquareController {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @FXML
+    public void save(String file) {
+
     }
 }
