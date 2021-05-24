@@ -43,8 +43,9 @@
                     <menus>
                         <Menu fx:id="FileMenu" mnemonicParsing="false" text="File">
                             <items>
-                                <MenuItem fx:id="OpenItem" mnemonicParsing="false" text="Open" />
-                                <MenuItem fx:id="SaveItem" mnemonicParsing="false" onAction="#handleSaveAs" text="Save" />
+                                <MenuItem fx:id="OpenItem" mnemonicParsing="false" onAction="#handleOpen" text="Open" />
+                                <MenuItem fx:id="SaveItem" mnemonicParsing="false" onAction="#handleSave" text="Save" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleSaveAs" text="Save As" />
                             </items>
                         </Menu>
                         <Menu fx:id="HelpMenu" mnemonicParsing="false" text="Help">
@@ -60,6 +61,7 @@
                     </font>
                 </Label>
                 <Button fx:id="ConditionButton" layoutX="1046.0" layoutY="639.0" mnemonicParsing="false" onMouseClicked="#GameCondition" prefHeight="39.0" prefWidth="113.0" text="START" />
+            <Button layoutX="893.0" layoutY="639.0" mnemonicParsing="false" onMouseClicked="#INITIAL" prefHeight="39.0" prefWidth="113.0" text="INITIAL" />
             </children>
         </Pane>
     </children>

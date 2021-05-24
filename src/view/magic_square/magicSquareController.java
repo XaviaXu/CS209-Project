@@ -24,12 +24,17 @@ import module.ms.Algo1;
 import module.ms.Algo2;
 import module.ms.MS;
 import module.ms.MSWrapper;
+import module.sk.SKWrapper;
+import view.sudoku.LayoutController;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.prefs.Preferences;
 
 public class magicSquareController {
 
@@ -78,14 +83,12 @@ public class magicSquareController {
     private int clock_y;
 
     private boolean constraint[][];
-    private boolean ifConstraint;
     private boolean listenStatus;
-    private boolean errorOnceOrGet;//to reduce error calculate
 //    private Condition state;
 
     private MS ms;
-    private int[][] bestBoard;
-    private int min_error = Integer.MAX_VALUE;
+//    private int[][] bestBoard;
+//    private int min_error = Integer.MAX_VALUE;
 
     public void setMS_stage(Stage MS_stage) {
         this.MS_stage = MS_stage;
@@ -201,7 +204,7 @@ public class magicSquareController {
                             } else {
                                 if (!constraint[finalI - 1][finalJ - 1]) {
                                     ms.cnst[finalI - 1][finalJ - 1] = Integer.parseInt(grid[finalI][finalJ].getText());
-                                    System.out.println(ms.cnst[finalI - 1][finalJ - 1]);
+//                                    System.out.println(ms.cnst[finalI - 1][finalJ - 1]);
                                     constraint[finalI - 1][finalJ - 1] = true;
                                     grid[finalI][finalJ].setBackground(new Background(new BackgroundFill(Color.valueOf("#EEB422"), null, null)));
                                 } else {
@@ -242,6 +245,9 @@ public class magicSquareController {
                     grid[i][j].setText(String.valueOf((i - 1) * size + j));
                 }
             }
+            this.ms.reEvl1();
+            this.ms.reEvl2();
+            ErrorField.setText(String.valueOf(this.ms.evl1+this.ms.evl2));
         } else {
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
@@ -356,16 +362,58 @@ public class magicSquareController {
             timeline.setCycleCount(50000000);
             timeline.play();
         } else if (ConditionButton.getText().equals(Condition.PAUSED.toString())) {
+            listenStatus = true;
             ConditionButton.setText(Condition.CONTINUE.toString());
             if (timeline != null && timeline.getStatus() == Animation.Status.RUNNING) timeline.pause();
         } else {
+            listenStatus = false;
             ConditionButton.setText(Condition.PAUSED.toString());
             if (timeline != null && timeline.getStatus() == Animation.Status.PAUSED) timeline.play();
         }
     }
 
+
+//            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+//            alert.initOwner(MS_stage);
+//            alert.setTitle("Tips");
+//            alert.setHeaderText("Please select one file to read!");
+//            alert.showAndWait();
+
+
     @FXML
-    private void handleSaveAs() {
+    private void handleSaveAs(){
+
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+                "XML files (*.xml)", "*.xml");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File file = fileChooser.showSaveDialog(MS_stage);
+
+        if (file != null) {
+            // Make sure it has the correct extension
+            if (!file.getPath().endsWith(".xml")) {
+                file = new File(file.getPath() + ".xml");
+            }
+//            getFilePath(file);
+            saveMSData(file);
+        }
+
+
+
+    }
+
+    @FXML
+    private void handleSave(){
+        File skFile = this.getFilePath();
+        if(skFile!=null){
+            saveMSData(skFile);
+        }else{
+            handleSaveAs();
+        }
+    }
+
+    @FXML
+    private void handleOpen() throws JAXBException {
         FileChooser fileChooser = new FileChooser();
 
         // Set extension filter
@@ -374,26 +422,35 @@ public class magicSquareController {
         fileChooser.getExtensionFilters().add(extFilter);
 
         // Show save file dialog
-        File file = fileChooser.showSaveDialog(MS_stage);
+        File file = fileChooser.showOpenDialog(MS_stage);
 
         if (file != null) {
-            // Make sure it has the correct extension
-            if (!file.getPath().endsWith(".xml")) {
-                file = new File(file.getPath() + ".xml");
-            }
-            System.out.println(file);
-            saveAs(file);
-        } else {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.initOwner(MS_stage);
-            alert.setTitle("Tips");
-            alert.setHeaderText("Please select one file to read!");
-            alert.showAndWait();
+//            mainApp.loadPersonDataFromFile(file);
+            loadMSData(file);
+        }
+    }
+
+    private File getFilePath(){
+        Preferences prefs = Preferences.userNodeForPackage(magicSquareController.class);
+        String filePath = prefs.get("filePath",null);
+        if(filePath != null){
+            return new File(filePath);
+        }else{
+            return null;
+        }
+    }
+
+    private void setFilePath(File file){
+        Preferences pref = Preferences.userNodeForPackage(LayoutController.class);
+        if(file!=null){
+            pref.put("filePath",file.getPath());
+        }else{
+            pref.remove("filePath");
         }
     }
 
     @FXML
-    public void saveAs(File file) {
+    public void saveMSData(File file) {
         try {
             JAXBContext context = JAXBContext
                     .newInstance(MSWrapper.class);
@@ -404,7 +461,7 @@ public class magicSquareController {
             // Wrapping our person data.
 
             MSWrapper wrapper = new MSWrapper();
-            wrapper.setMn(size);
+            wrapper.setMn(ms.mn);
             wrapper.setColCnst(ms.colCnst);
             wrapper.setColErr(ms.colErr);
             wrapper.setRowCnst(ms.rowCnst);
@@ -412,14 +469,64 @@ public class magicSquareController {
             wrapper.setDiaErr(ms.diaErr);
             wrapper.setEvl1(ms.evl1);
             wrapper.setEvl2(ms.evl2);
+            wrapper.setSquare(ms.square);
+            wrapper.setN(ms.n);
+            wrapper.setCnst(ms.cnst);
             m.marshal(wrapper, file);
+            setFilePath(file);
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    @FXML
-    public void save(String file) {
+    public void loadMSData(File file) throws JAXBException {
+        JAXBContext context = JAXBContext.newInstance(MSWrapper.class);
+        Unmarshaller um = context.createUnmarshaller();
 
+        MSWrapper wrapper = (MSWrapper) um.unmarshal(file);
+        this.size = wrapper.getN();
+        listenStatus = false;
+        Board.getChildren().clear();
+        putBoard();
+        sizeSlider.setValue(size);
+        ms.mn = wrapper.getMn();
+        ms.n = wrapper.getN();
+        ms.square = wrapper.getSquare();
+        ms.evl2 = wrapper.getEvl2();
+        ms.evl1 = wrapper.getEvl1();
+        ms.colErr = wrapper.getColErr();
+        ms.rowErr = wrapper.getRowErr();
+        ms.diaErr = wrapper.getDiaErr();
+        ms.colCnst = wrapper.getColCnst();
+        ms.rowCnst = wrapper.getRowCnst();
+        ms.cnst = wrapper.getCnst();
+        putGrid(ms);
+        listenStatus = true;
+        boolean temp = false;
+        for(int i=0;i<ms.n;i++){
+            for (int j=0;j<ms.n;j++){
+                if(ms.cnst[i][j]!=0) {
+                    this.constraint[i][j] = true;
+                    temp = true;
+                    grid[i+1][j+1].setBackground(new Background(new BackgroundFill(Color.valueOf("#EEB422"), null, null)));
+                }
+            }
+        }
+        if(temp) {
+            ConstraintYes.setSelected(true);
+            ConstraintNo.setSelected(false);
+        }else {
+            ConstraintYes.setSelected(false);
+            ConstraintNo.setSelected(true);
+        }
+    }
+
+    @FXML
+    public void INITIAL(){
+        Board.getChildren().clear();
+        listenStatus = true;
+        putBoard();
+        ms = new MS(size);
     }
 }

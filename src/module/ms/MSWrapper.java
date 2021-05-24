@@ -6,19 +6,48 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "games")
-@XmlAccessorType(XmlAccessType.FIELD)
-
 public class MSWrapper {
-    public int mn;
+    private int n;
+    private int[][] square;
+    private int[][] cnst;
 
-    public int evl1;
-    public int evl2;
-    public int[] rowErr;
-    public int[] colErr;
-    public int[] diaErr; // 0: \, 1: /
-    public boolean[] rowCnst;
-    public boolean[] colCnst;
+    private int mn;
+
+    private int evl1;
+    private int evl2;
+    private int[] rowErr;
+    private int[] colErr;
+    private int[] diaErr; // 0: \, 1: /
+    private boolean[] rowCnst;
+    private boolean[] colCnst;
     //
+
+    @XmlElement(name = "n")
+    public int getN() {
+        return n;
+    }
+
+    public void setN(int n) {
+        this.n = n;
+    }
+
+    @XmlElement(name = "square")
+    public int[][] getSquare() {
+        return square;
+    }
+
+    public void setSquare(int[][] square) {
+        this.square = square;
+    }
+
+    @XmlElement(name = "cnst")
+    public int[][] getCnst() {
+        return cnst;
+    }
+
+    public void setCnst(int[][] cnst) {
+        this.cnst = cnst;
+    }
 
     @XmlElement(name = "Cnst")
     public boolean[] getColCnst() {
