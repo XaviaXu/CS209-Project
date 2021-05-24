@@ -1,7 +1,7 @@
 package module;
 
 public enum Condition {
-    START,PAUSED,CONTINUE;
+    START,PAUSED,CONTINUE,FINISH;
 
     @Override
     public String toString() {

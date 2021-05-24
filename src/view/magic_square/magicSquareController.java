@@ -23,6 +23,7 @@ import module.magic_square.MagicSquareWrapper;
 import module.ms.Algo1;
 import module.ms.Algo2;
 import module.ms.MS;
+import module.ms.MSWrapper;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -110,9 +111,10 @@ public class magicSquareController {
 
 
     private void putBoard() {
+        ConditionButton.setText(Condition.START.toString());
         listenStatus = true;
         ms = new MS(size);
-        if(size>1) {
+        if (size > 1) {
             Algo1.init(size);
             Algo2.init(size);
         }
@@ -159,27 +161,30 @@ public class magicSquareController {
                 int finalI = i;
                 int finalJ = j;
 
+
                 grid[i][j].textProperty().addListener((observable, oldValue, newValue) -> {
-                    ms.square[finalI - 1][finalJ - 1] = Integer.parseInt(newValue);
-                    ErrorField.setText(String.valueOf(ms.evl1));
+                    if (listenStatus) {
+                        ms.square[finalI - 1][finalJ - 1] = Integer.parseInt(newValue);
+                        ErrorField.setText(String.valueOf(ms.evl1 + ms.evl2));
 
-                    int value = Integer.parseInt(grid[0][finalJ].getText())
-                            + Integer.parseInt((String) newValue) - Integer.parseInt(oldValue);
-                    grid[0][finalJ].setText(String.valueOf(value));
-                    grid[size + 1][finalJ].setText(grid[0][finalJ].getText());
+                        int value = Integer.parseInt(grid[0][finalJ].getText())
+                                + Integer.parseInt((String) newValue) - Integer.parseInt(oldValue);
+                        grid[0][finalJ].setText(String.valueOf(value));
+                        grid[size + 1][finalJ].setText(grid[0][finalJ].getText());
 
-                    grid[finalI][0].setText(String.valueOf(Integer.parseInt(grid[finalI][0].getText())
-                            + Integer.parseInt((String) newValue) - Integer.parseInt(oldValue)));
-                    grid[finalI][size + 1].setText(grid[finalI][0].getText());
-
-                    if (finalI == finalJ) {
-                        grid[0][0].setText(String.valueOf(Integer.parseInt(grid[0][0].getText())
+                        grid[finalI][0].setText(String.valueOf(Integer.parseInt(grid[finalI][0].getText())
                                 + Integer.parseInt((String) newValue) - Integer.parseInt(oldValue)));
-                        grid[size + 1][size + 1].setText(grid[0][0].getText());
-                    } else if (finalI + finalJ == size + 1) {
-                        grid[0][size + 1].setText(String.valueOf(Integer.parseInt(grid[0][size + 1].getText())
-                                + Integer.parseInt((String) newValue) - Integer.parseInt(oldValue)));
-                        grid[size + 1][0].setText(grid[0][size + 1].getText());
+                        grid[finalI][size + 1].setText(grid[finalI][0].getText());
+
+                        if (finalI == finalJ) {
+                            grid[0][0].setText(String.valueOf(Integer.parseInt(grid[0][0].getText())
+                                    + Integer.parseInt((String) newValue) - Integer.parseInt(oldValue)));
+                            grid[size + 1][size + 1].setText(grid[0][0].getText());
+                        } else if (finalI + finalJ == size + 1) {
+                            grid[0][size + 1].setText(String.valueOf(Integer.parseInt(grid[0][size + 1].getText())
+                                    + Integer.parseInt((String) newValue) - Integer.parseInt(oldValue)));
+                            grid[size + 1][0].setText(grid[0][size + 1].getText());
+                        }
                     }
                 });
 
@@ -230,8 +235,8 @@ public class magicSquareController {
 //        System.out.println(grid[0][0].getWidth()*size);
     }
 
-    public void putGrid(int[][] array) {
-        if (array == null) {
+    public void putGrid(MS ms) {
+        if (ms == null) {
             for (int i = 1; i < size + 1; i++) {
                 for (int j = 1; j < size + 1; j++) {
                     grid[i][j].setText(String.valueOf((i - 1) * size + j));
@@ -240,9 +245,23 @@ public class magicSquareController {
         } else {
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
-                    grid[i + 1][j + 1].setText(String.valueOf(array[i][j]));
+                    grid[i + 1][j + 1].setText(String.valueOf(ms.square[i][j]));
                 }
             }
+            for(int i=1;i<size+1;i++){
+                int temp_err = ms.colErr[i-1]+Integer.parseInt(SumField.getText());
+                grid[0][i].setText(String.valueOf(temp_err));
+                grid[size+1][i].setText(String.valueOf(temp_err));
+            }
+            for(int i=1;i<size+1;i++){
+                int temp_err = ms.rowErr[i-1]+Integer.parseInt(SumField.getText());
+                grid[i][0].setText(String.valueOf(temp_err));
+                grid[i][size+1].setText(String.valueOf(temp_err));
+            }
+            grid[0][0].setText(String.valueOf(ms.diaErr[0]+Integer.parseInt(SumField.getText())));
+            grid[size+1][size+1].setText(String.valueOf(ms.diaErr[0]+Integer.parseInt(SumField.getText())));
+            grid[0][size+1].setText(String.valueOf(ms.diaErr[1]+Integer.parseInt(SumField.getText())));
+            grid[size+1][0].setText(String.valueOf(ms.diaErr[1]+Integer.parseInt(SumField.getText())));
         }
     }
 
@@ -281,34 +300,60 @@ public class magicSquareController {
 
     public void GameCondition() {
         if (ConditionButton.getText().equals(Condition.START.toString())) {
+            listenStatus = false;
             ConditionButton.setText(Condition.PAUSED.toString());
             ms.fill();
             ms.reEvl1();
             Algo1.algoInit();
 
-            timeline = new Timeline(new KeyFrame(Duration.seconds(0.0001), new EventHandler<ActionEvent>() {
+            timeline = new Timeline(new KeyFrame(Duration.millis(0.1), new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-
-                    Algo1.nextGeneration(ms);
-                    int generation = Integer.parseInt(GenerationField.getText());
-                    GenerationField.setText(String.valueOf(generation + 1));
-                    if (generation % Algo1.S == 0) {
+                    if(ms.evl1!=0) {
+                        for (int i = 0; i < Algo1.S; i++) {
+                            Algo1.nextGeneration(ms);
+                        }
+                        ErrorField.setText(String.valueOf(ms.evl1+ms.evl2));
+                        int generation = Integer.parseInt(GenerationField.getText());
+                        GenerationField.setText(String.valueOf(generation + Algo1.S));
                         Algo1.anneal();
-                        if (Algo1.t < Algo1.EPS || ms.evl1 <= 0) {
+//                    if (generation % Algo1.S == 0) {
+//                        Algo1.anneal();
+                        if (Algo1.t < Algo1.EPS) Algo1.algoInit();
+                        if (ms.evl1 <= 0) {
+//                            System.out.println(ms.evl1);
+//                            System.out.println(Algo1.t+" "+Algo1.EPS);
+//                        timeline.stop();
+//                        ConditionButton.setText(Condition.FINISH.toString());
+                            ms.reEvl2();
+                        }
+                    }else {
+                        for (int k = 0; k < 100; k++) {
+                            for (int i = 0; i < Algo2.S; i++) {
+                                Algo2.nextGeneration(ms);
+                            }
+
+                            Algo2.anneal();
+//                    if (generation % Algo1.S == 0) {
+//                        Algo1.anneal();
+                            if (Algo2.t < Algo2.EPS) Algo2.algoInit();
+
+                        }
+                        ErrorField.setText(String.valueOf(ms.evl1 + ms.evl2));
+                        int generation = Integer.parseInt(GenerationField.getText());
+                        GenerationField.setText(String.valueOf(generation + 100));
+                        if (ms.evl2 <= 0) {
+//                            System.out.println(ms.evl1);
+//                            System.out.println(Algo1.t+" "+Algo1.EPS);
                             timeline.stop();
-                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                            alert.initOwner(MS_stage);
-                            alert.setTitle("Tips");
-                            alert.setHeaderText("The first Generation has finished");
-                            alert.showAndWait();
+                            ConditionButton.setText(Condition.FINISH.toString());
                         }
                     }
-                    putGrid(ms.square);
-
+//                    }
+                    putGrid(ms);
                 }
             }));
-            timeline.setCycleCount(10000000);
+            timeline.setCycleCount(50000000);
             timeline.play();
         } else if (ConditionButton.getText().equals(Condition.PAUSED.toString())) {
             ConditionButton.setText(Condition.CONTINUE.toString());
@@ -351,27 +396,23 @@ public class magicSquareController {
     public void saveAs(File file) {
         try {
             JAXBContext context = JAXBContext
-                    .newInstance(MagicSquareWrapper.class);
+                    .newInstance(MSWrapper.class);
 
             Marshaller m = context.createMarshaller();
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
             // Wrapping our person data.
 
-            MagicSquareWrapper wrapper = new MagicSquareWrapper();
-            wrapper.setN(size);
-            wrapper.setGeneration(Integer.parseInt(GenerationField.getText()));
-            wrapper.setBoard(ms.square);
-            wrapper.setCnst(ms.cnst);
-            wrapper.setMn(ms.mn);
-//            wrapper.setMutates(ms.mutates);
-
-            // Marshalling and saving XML to the file.
+            MSWrapper wrapper = new MSWrapper();
+            wrapper.setMn(size);
+            wrapper.setColCnst(ms.colCnst);
+            wrapper.setColErr(ms.colErr);
+            wrapper.setRowCnst(ms.rowCnst);
+            wrapper.setRowErr(ms.rowErr);
+            wrapper.setDiaErr(ms.diaErr);
+            wrapper.setEvl1(ms.evl1);
+            wrapper.setEvl2(ms.evl2);
             m.marshal(wrapper, file);
-
-
-            // Save the file path to the registry.
-//            setPersonFilePath(file);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
