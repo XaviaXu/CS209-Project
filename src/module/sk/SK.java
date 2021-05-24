@@ -71,9 +71,9 @@ public class SK extends SquareProblem {
                 }
 
                 if (arr.size() == 1) {
-                    x = arr.get(0) / n;
-                    y = arr.get(0) % n;
-                    cnst[x][y] = square[x][y];
+                    int xx = arr.get(0) / n;
+                    int yy = arr.get(0) % n;
+                    cnst[xx][yy] = square[xx][yy];
                     arr.clear();
                 }
                 nonFixedCells[x * size + y] = arr.toArray(new Integer[0]);
