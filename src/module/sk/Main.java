@@ -20,6 +20,7 @@ public class Main {
         int cost, min;
         double t;
 
+        long t1 = System.currentTimeMillis();
         System.out.println("round " + 0 + ": " + cur.getCost());
         cur.show();
         int cnt = 0;
@@ -55,5 +56,8 @@ public class Main {
 
         System.out.println("The answer:");
         cur.show();
+
+        long t2 = System.currentTimeMillis();
+        System.out.println(t2 - t1);
     }
 }

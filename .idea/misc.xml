@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="JavadocGenerationManager">
+    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/../../../study/JAVA2/project/doc" />
+    <option name="OPTION_SCOPE" value="private" />
+  </component>
   <component name="PDMPlugin">
     <option name="skipTestSources" value="false" />
   </component>
