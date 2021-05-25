@@ -6,11 +6,11 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        int lvl = 20;
+        int lvl = 40;
         MS ms = new MS(lvl);
         ms.readMs("input/" + lvl + ".in");
 
-        int rnd = 30;
+        int rnd = 1;
         double[] times1 = new double[rnd];
         double[] times2 = new double[rnd];
         double[] tot_times = new double[rnd];
@@ -18,7 +18,7 @@ public class Main {
         Algo1.init(lvl);
         Algo2.init(lvl);
 
-        ms.show();
+//        ms.show();
         ms.fill();
 
         for (int it = 0; it < rnd; ++it) {
@@ -34,9 +34,9 @@ public class Main {
 
             ms.reEvl1();
             do {
-//                if (gen % 2 == 0) {
-//                    System.out.println("round " + gen + ": " + ms.evl1);
-//                }
+                if (gen % 2 == 0) {
+                    System.out.println("round " + gen + ": " + ms.evl1);
+                }
 
                 Algo1.algoInit();
 //                ms.reEvl1();
@@ -49,7 +49,7 @@ public class Main {
                 }
 
                 ++gen;
-            } while (ms.evl1 > 0 && gen <= 20000);
+            } while (ms.evl1 > 0);
 
             long t2 = System.currentTimeMillis();
             times1[it] = t2 - t1;
@@ -64,11 +64,16 @@ public class Main {
             gen = 0;
             cnt = 0;
 
+            boolean check = false;
             ms.reEvl2();
             do {
-//                if (gen % 200 == 0) {
-//                    System.out.println("round " + gen + ": " + ms.evl2);
-//                }
+                if (gen % 200 == 0) {
+                    System.out.println("round " + gen + ": " + ms.evl2);
+                    if (gen > 200){
+                        check = true;
+                        break;
+                    }
+                }
 
                 Algo2.algoInit();
 //                ms.reEvl1();
@@ -84,7 +89,13 @@ public class Main {
                 }
 
                 ++gen;
-            } while (ms.evl2 > 0 && gen <= 200000);
+            } while (ms.evl2 > 0);
+
+            if(check){
+                --it;
+                ms.fill();
+                continue;
+            }
 
             t2 = System.currentTimeMillis();
             times2[it] += t2 - t1;

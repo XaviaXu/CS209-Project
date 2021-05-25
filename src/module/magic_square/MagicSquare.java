@@ -68,9 +68,9 @@ public class MagicSquare {
      * @throws Exception the exception
      */
     public static void main(String[] args) throws Exception {
-        MagicSquare ms = new MagicSquare(20);
+        MagicSquare ms = new MagicSquare(4);
 
-        ms.readMs("res/20.in");
+        ms.readMs("input/4.in");
 
         int rnd = 30;
         double[] times1 = new double[rnd];
