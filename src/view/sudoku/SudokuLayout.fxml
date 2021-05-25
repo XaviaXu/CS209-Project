@@ -12,7 +12,7 @@
          <children>
             <ImageView fitHeight="800.0" fitWidth="1300.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../image/sodukuBac.jpg" />
+                  <Image url="@../../image/sodukuBac.png" />
                </image>
             </ImageView>
             <GridPane fx:id="sudokuTextContainer" layoutX="64.0" layoutY="41.0" prefHeight="700.0" prefWidth="700.0">
@@ -64,7 +64,7 @@
                         <Font name="Cambria" size="36.0" />
                      </font>
                   </Label>
-                  <Button fx:id="ctrlButton" layoutX="52.0" layoutY="443.0" mnemonicParsing="false" onMouseClicked="#gameControl" prefHeight="55.0" prefWidth="117.0" text="START" />
+                  <Button fx:id="ctrlButton" layoutX="0" layoutY="443.0" mnemonicParsing="false" onMouseClicked="#gameControl" prefHeight="55.0" prefWidth="200.0" text="START" />
                </children>
             </Pane>
          </children>

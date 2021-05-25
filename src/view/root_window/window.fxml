@@ -11,7 +11,7 @@
    <children>
       <ImageView fitHeight="500.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../image/bac.jpg" />
+            <Image url="@../../image/bac1.jpg" />
          </image>
       </ImageView>
       <Button layoutX="156.0" layoutY="263.0" mnemonicParsing="false" onMouseClicked="#MSClick" opacity="0.0" prefHeight="58.0" prefWidth="131.0" text="magic square">
