@@ -65,8 +65,8 @@ public class LayoutController {
     private int min;
     private double t = T;
 
-    private boolean rst = false;
-
+//    private boolean rst = false;
+    private int[][] localMin;
 
 
     @FXML
@@ -138,7 +138,7 @@ public class LayoutController {
             }
         }
 
-        preset.getItems().addAll("EASY","NORMAL","HARD","CLEAR");
+        preset.getItems().addAll("PRESET1","PRESET2","PRESET3","PRESET4","CLEAR");
         preset.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -168,7 +168,9 @@ public class LayoutController {
         }else if(selectedIndex == 1){
             //normal
             fileName = "input/normal.in";
-        }else if(selectedIndex ==2){
+        }else if(selectedIndex==2){
+            fileName = "input/easy.in";
+        }else if(selectedIndex ==3){
             //hard
             fileName = "input/test.in";
         }else{
@@ -185,6 +187,11 @@ public class LayoutController {
                     sudokuCells[i][j].setText(cnst[i][j]==0?"":String.valueOf(cnst[i][j]));
                 }else{
                     sudokuCells[i][j].setText(String.valueOf(sk.square[i][j]));
+                }
+                if(sk.cnst[i][j]==0){
+                    sudokuCells[i][j].setStyle("-fx-text-fill: rgba(169, 224, 253, 0.9)");
+                }else{
+                    sudokuCells[i][j].setStyle("-fx-text-fill: rgba(231, 253, 169, 0.9)");
                 }
                 if(checkConstrain(i,j)){
                     //正常
@@ -269,14 +276,16 @@ public class LayoutController {
         }else if(ctrlButton.getText().equals(Condition.CONTINUE.toString())){
             ctrlButton.setText(Condition.PAUSED.toString());
             playerCtrl = false;
+            sk.fill();
             if (timeline != null && timeline.getStatus() == Animation.Status.PAUSED) timeline.play();
         }else{
             //reset
-            sk.square = new int[9][9];
+            clearBoard();
             ctrlButton.setText(Condition.START.toString());
             generation.setText("0");
             error.setText("0");
             setBoard();
+//            playerCtrl = true;
         }
     }
 
@@ -400,7 +409,7 @@ public class LayoutController {
     }
 
     private boolean checkConstrain(int row, int column){
-        if(sk.square[row][column]==0||(!sudokuCells[row][column].isEditable()&&playerCtrl)){return true;}
+        if(sk.square[row][column]==0||sk.cnst[row][column]!=0){return true;}
         for (int i = 0; i < 9; i++) {
             if(sk.square[row][i]==sk.square[row][column]&&i!=column){
                 return false;

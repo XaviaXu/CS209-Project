@@ -87,8 +87,8 @@ public class magicSquareController {
 //    private Condition state;
 
     private MS ms;
-//    private int[][] bestBoard;
-//    private int min_error = Integer.MAX_VALUE;
+    private int[][] bestBoard;
+    private int min_error = Integer.MAX_VALUE;
 
     public void setMS_stage(Stage MS_stage) {
         this.MS_stage = MS_stage;
@@ -110,6 +110,7 @@ public class magicSquareController {
 //        Menu.setOnMouseExited(e -> Menu.setOpacity(0));
 
         ConstraintNo.setSelected(true);
+
     }
 
 
@@ -245,6 +246,11 @@ public class magicSquareController {
                     grid[i][j].setText(String.valueOf((i - 1) * size + j));
                 }
             }
+            if(size%2==1) {
+                System.out.println(size*size/2+size/2+1+" "+Integer.parseInt(grid[0][size+1].getText()));
+                grid[0][size+1].setText(String.valueOf(Integer.parseInt(grid[0][size+1].getText())+size*(size/2)+size/2+1));
+                grid[size+1][0].setText(grid[0][size+1].getText());
+            }
             this.ms.reEvl1();
             this.ms.reEvl2();
             ErrorField.setText(String.valueOf(this.ms.evl1+this.ms.evl2));
@@ -306,6 +312,10 @@ public class magicSquareController {
 
     public void GameCondition() {
         if (ConditionButton.getText().equals(Condition.START.toString())) {
+            if(size==1) {
+                ConditionButton.setText(Condition.FINISH.toString());
+                return;
+            }
             listenStatus = false;
             ConditionButton.setText(Condition.PAUSED.toString());
             ms.fill();
@@ -318,6 +328,11 @@ public class magicSquareController {
                     if(ms.evl1!=0) {
                         for (int i = 0; i < Algo1.S; i++) {
                             Algo1.nextGeneration(ms);
+                            if(ms.evl1+ms.evl2<min_error) min_error = ms.evl1+ms.evl2;
+//                            if(min_error==0) {
+//                                System.out.println("============================================");
+//                                ms.show();
+//                            }
                         }
                         ErrorField.setText(String.valueOf(ms.evl1+ms.evl2));
                         int generation = Integer.parseInt(GenerationField.getText());
@@ -337,6 +352,8 @@ public class magicSquareController {
                         for (int k = 0; k < 100; k++) {
                             for (int i = 0; i < Algo2.S; i++) {
                                 Algo2.nextGeneration(ms);
+                                if(ms.evl2+ms.evl1<min_error) min_error = ms.evl1+ ms.evl2;
+//                                if(ms.evl1==0&&ms.evl2==0) System.out.println(ms.evl1+" "+ms.evl2);
                             }
 
                             Algo2.anneal();
@@ -363,9 +380,15 @@ public class magicSquareController {
             timeline.play();
         } else if (ConditionButton.getText().equals(Condition.PAUSED.toString())) {
             listenStatus = true;
+            ErrorField.setText(String.valueOf(min_error));
+            System.out.println(min_error);
             ConditionButton.setText(Condition.CONTINUE.toString());
             if (timeline != null && timeline.getStatus() == Animation.Status.RUNNING) timeline.pause();
-        } else {
+        }
+        else if(ConditionButton.getText().equals(Condition.FINISH.toString())){
+
+        }
+        else {
             listenStatus = false;
             ConditionButton.setText(Condition.PAUSED.toString());
             if (timeline != null && timeline.getStatus() == Animation.Status.PAUSED) timeline.play();

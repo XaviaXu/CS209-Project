@@ -32,9 +32,9 @@
                             </font>
                         </RadioButton>
                         <Slider fx:id="sizeSlider" blockIncrement="5.0" layoutX="49.0" layoutY="291.0" majorTickUnit="5.0" max="20.0" minorTickCount="5" prefHeight="58.0" prefWidth="289.0" showTickLabels="true" showTickMarks="true" />
-                        <TextField fx:id="ErrorField" layoutX="118.0" layoutY="85.0" />
-                        <TextField fx:id="GenerationField" layoutX="176.0" layoutY="34.0" />
-                        <TextField fx:id="DimField" alignment="CENTER" layoutX="176.0" layoutY="367.0" style="-fx-font-weight: bold;" />
+                        <TextField fx:id="ErrorField" editable="false" layoutX="118.0" layoutY="85.0" />
+                        <TextField fx:id="GenerationField" editable="false" layoutX="176.0" layoutY="34.0" />
+                        <TextField fx:id="DimField" alignment="CENTER" editable="false" layoutX="176.0" layoutY="367.0" style="-fx-font-weight: bold;" />
                         <TextField fx:id="SumField" alignment="CENTER" editable="false" layoutX="176.0" layoutY="423.0" style="-fx-font-weight: bold;" />
                     </children>
                 </AnchorPane>
