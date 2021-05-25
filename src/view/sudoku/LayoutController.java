@@ -280,11 +280,12 @@ public class LayoutController {
             if (timeline != null && timeline.getStatus() == Animation.Status.PAUSED) timeline.play();
         }else{
             //reset
-            sk.square = new int[9][9];
+            clearBoard();
             ctrlButton.setText(Condition.START.toString());
             generation.setText("0");
             error.setText("0");
             setBoard();
+//            playerCtrl = true;
         }
     }
 
