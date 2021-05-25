@@ -52,7 +52,7 @@
     -fx-font-family: "Lato";
     -fx-font-size: 18;
     -fx-alignment: center;
-    -fx-text-fill: rgba(213, 242, 255, 0.9);
+    -fx-text-fill: rgba(169, 224, 253, 0.9);
     -fx-cursor: hand;
     -fx-font-weight: bold;
 }
@@ -203,3 +203,20 @@
 /*    -fx-opacity: 0;*/
 /*}*/
 
+.button {
+    /*-fx-background-color: transparent;*/
+    -fx-font-family: "Lato";
+    -fx-font-size: 30;
+    -fx-alignment: center;
+    -fx-text-fill: rgba(117, 159, 180, 0.9);
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 3px, 3px, 2px, 1px;
+    -fx-background-color: rgba(171, 205, 255, 0.3);
+}
+.button:hover{
+
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+}
