@@ -235,7 +235,7 @@ public class LayoutController {
             int[][]mb = sk.square.clone();
             final int[] cnt = {0};
 
-            timeline = new Timeline(new KeyFrame(Duration.seconds(0.0007), new EventHandler<ActionEvent>() {
+            timeline = new Timeline(new KeyFrame(Duration.seconds(0.0001), new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
                     if(!(t>=eps&&cost>0)){
