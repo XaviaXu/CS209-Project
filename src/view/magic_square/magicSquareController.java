@@ -328,7 +328,7 @@ public class magicSquareController {
                     if(ms.evl1!=0) {
                         for (int i = 0; i < Algo1.S; i++) {
                             Algo1.nextGeneration(ms);
-                            if(ms.evl1+ms.evl2<min_error) min_error = ms.evl1+ms.evl2;
+                            if(ms.evl1+ms.evl2<min_error&&ms.evl1+ms.evl2!=0) min_error = ms.evl1+ms.evl2;
 //                            if(min_error==0) {
 //                                System.out.println("============================================");
 //                                ms.show();
@@ -352,7 +352,7 @@ public class magicSquareController {
                         for (int k = 0; k < 100; k++) {
                             for (int i = 0; i < Algo2.S; i++) {
                                 Algo2.nextGeneration(ms);
-                                if(ms.evl2+ms.evl1<min_error) min_error = ms.evl1+ ms.evl2;
+                                if(ms.evl2+ms.evl1<min_error&&ms.evl1+ms.evl2!=0) min_error = ms.evl1+ ms.evl2;
 //                                if(ms.evl1==0&&ms.evl2==0) System.out.println(ms.evl1+" "+ms.evl2);
                             }
 
@@ -396,7 +396,8 @@ public class magicSquareController {
     }
 
 
-//            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+//            Alert alert = new Alert(Alert.AlertType.CON
+//            FIRMATION);
 //            alert.initOwner(MS_stage);
 //            alert.setTitle("Tips");
 //            alert.setHeaderText("Please select one file to read!");
