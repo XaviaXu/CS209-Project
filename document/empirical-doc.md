@@ -10,7 +10,19 @@ The algorithm we used in sudoku is a simple simulate annealing algorithm, and we
 
 For the magic square solver, we implement a simulate annealing algorithm with hyper-heuristic solver. The simulate annealing part is strengthen by *multiple try*. The pseudocode shows there
 
-![image-20210526004314678](empirical-doc.assets/image-20210526004314678.png)
+```pseudocode
+t = Ts
+ms = initial Sudoku
+while t > Te && cost(sk) > 0:
+	newMs = ms.swapCells()
+	if cost(newMs) < cost(ms):
+		ms = newMs
+    else:
+    	accept newMs in probability = exp((cost(ms) - cost(newMs)) / t)
+    if cost(ms) == 0:
+    	stop and print results
+    t = t * D
+```
 
 Where `Ts` is initial temperature, `Te` is ending temperature. `D` is delta, which can control the speed of annealing. S is times of multiple try. 
 
@@ -20,9 +32,55 @@ hyper heuristic is a thought to combined multiple heuristic function. There are 
 
 ##### HLH
 
-The HLH we used is Random Permutation
+The HLH we used is Random Permutation (RP). RP will generate a random permutation, then select the LLH function in the order of generated permutation. The pseudocode is
 
+```pseudocode
+candiList = get random permutation
 
+void hlh(MS ms):
+	i = candiList.getNext()
+	mutateList.get(i).mutate(ms)
+```
+
+##### LLH
+
+LLHs is a set of mutate functions, in our solver design, there are 5 LLHs under the HLH's control. We plot a row or column to gray when the sum of this row/column is not correct, and plot the crossing cell of a gray row and a gray column to black. And let S1 be the set of dark cells, S2 is the set of gray and dark cells.
+
+<img src="empirical-doc.assets/image-20210526012303547.png" alt="image-20210526012303547" style="zoom: 80%;" />
+
+The 5 LLH are
+
+| LLH function | Describe                                    |
+| ------------ | ------------------------------------------- |
+| S0           | Swap two cells randomly                     |
+| S11          | Swap a cell in S1 and a cell in S2 randomly |
+| S12          | Swap a cell in S2 and a cell in S2 randomly |
+| S13          | Swap a cell in S2 and another cell randomly |
+| S21          | Swap two rows or two columns randomly       |
+
+### Sudoku
+
+Sudoku is simpler than MagicSquare, the algorithm is a simple simulate annealing.
+
+#### Simulate Annealing
+
+For the magic square solver, we implement a simulate annealing algorithm with hyper-heuristic solver. The simulate annealing part is strengthen by *multiple try*. The pseudocode shows there
+
+```pseudocode
+t = Ts
+sk = initial Sudoku
+while t > Te && cost(sk) > 0:
+	newSk = sk.swapCells()
+	if cost(newSk) < cost(sk):
+		sk = newSk
+    else:
+    	accept newSk in probability = exp((cost(sk) - cost(newSk)) / t)
+    if cost(sk) == 0:
+    	stop and print results
+    t = t * D
+```
+
+Where `Ts` is initial temperature, `Te` is ending temperature. `D` is delta, which can control the speed of annealing. S is times of multiple try. 
 
 ## Result
 
@@ -34,9 +92,24 @@ Here is time table of result, each result are under 30 times runs (except the do
 
 | Result \ Size      | 5     | 10     | 15     | 20     | 40 (doubling test) |
 | ------------------ | ----- | ------ | ------ | ------ | ------------------ |
-| Average time       | 50 ms | 106 ms | 263 ms | 672 ms | \>= 10min          |
+| Average time       | 50 ms | 106 ms | 263 ms | 772 ms | 151750ms           |
 | standard deviation | 2 ms  | 62 ms  | 184 ms | 358 ms | \~                 |
 
+We try to fit the data by `exponent`, `linear`, `polynomial`, and `idempotent`， the $R^2$ are
+
+| Title      | Fit function          | R^2^   |
+| ---------- | --------------------- | ------ |
+| exponent   | $11.268e^{0.2361x}$   | 0.9936 |
+| linear     | $196.68x - 1723.2$    | 0.7332 |
+| polynomial | $19.211x^2-144.66x+1$ | 0.9338 |
+| idempotent | $0.371x^{2.7048}$     | 0.877  |
+
+So we choose the `exponent` as the result
+
+<img src="empirical-doc.assets/image-20210526113248218.png" alt="image-20210526113248218" style="zoom:50%;" />
+$$
+y = 11.268 * e ^ {0.2361x}
+$$
 More result details are in the [Appendix A](#Appendix A: 30 times result of magic square from 5 to 15 level) and [Appendix B](#Appendix B: result of 20 level magic square)
 
 ### Sudoku
@@ -47,7 +120,18 @@ The result of 3 level sudoku is
 average time: 23ms 
 std deviation: 2ms
 ```
+The result of 6 level sudoku is
 
+```
+average time: 6701ms
+```
+
+> The running time of sudoku is strongly related with the input constraints, so these result may not reliable.
+
+We assume the time of solving a sudoku is related to input size n. There are $n ^ 4$ cells in a sudoku. So the complexity can be
+$$
+y = O(n^4)
+$$
 
 
 # Appendix A: 30 times result of magic square from 5 to 15 level

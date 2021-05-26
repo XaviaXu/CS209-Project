@@ -6,11 +6,11 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        int lvl = 40;
+        int lvl = 25;
         MS ms = new MS(lvl);
         ms.readMs("input/" + lvl + ".in");
 
-        int rnd = 1;
+        int rnd = 10;
         double[] times1 = new double[rnd];
         double[] times2 = new double[rnd];
         double[] tot_times = new double[rnd];
@@ -69,7 +69,7 @@ public class Main {
             do {
                 if (gen % 200 == 0) {
                     System.out.println("round " + gen + ": " + ms.evl2);
-                    if (gen > 200){
+                    if (gen > 20000){
                         check = true;
                         break;
                     }
